@@ -1,0 +1,335 @@
+<ul>
+  <li><a href="#error-promise.promisify-called-on-an-object">Error: Promise.promisify called on an object</a></li>
+  <li><a href="#error-the-promise-constructor-requires-a-resolver-function">Error: the promise constructor requires a resolver function</a></li>
+  <li><a href="#error-the-promise-constructor-cannot-be-invoked-directly">Error: the promise constructor cannot be invoked directly</a></li>
+  <li><a href="#error-expecting-an-array-a-promise-or-a-thenable">Error: expecting an array, a promise or a thenable</a></li>
+  <li><a href="#error-generatorfunction-must-be-a-function">Error: generatorFunction must be a function</a></li>
+  <li><a href="#error-fn-must-be-a-function">Error: fn must be a function</a></li>
+  <li><a href="#error-cannot-enable-long-stack-traces-after-promises-have-been-created">Error: cannot enable long stack traces after promises have been created</a></li>
+  <li><a href="#error-cannot-get-fulfillment-value-of-a-non-fulfilled-promise">Error: cannot get fulfillment value of a non-fulfilled promise</a></li>
+  <li><a href="#error-cannot-get-rejection-reason-of-a-non-rejected-promise">Error: cannot get rejection reason of a non-rejected promise</a></li>
+  <li><a href="#error-the-target-of-promisifyall-must-be-an-object-or-a-function">Error: the target of promisifyAll must be an object or a function</a></li>
+  <li><a href="#error-circular-promise-resolution-chain">Error: circular promise resolution chain</a></li>
+  <li><a href="#error-cannot-await-properties-of-a-non-object">Error: cannot await properties of a non-object</a></li>
+  <li><a href="#error-expecting-a-positive-integer">Error: expecting a positive integer</a></li>
+  <li><a href="#error-a-value-was-yielded-that-could-not-be-treated-as-a-promise">Error: A value was yielded that could not be treated as a promise</a></li>
+  <li><a href="#error-cannot-await-properties-of-a-non-object">Error: cannot await properties of a non object</a></li>
+  <li><a href="#error-cannot-promisify-an-api-that-has-normal-methods">Error: Cannot promisify an API that has normal methods</a></li>
+  <li><a href="#error-catch-filter-must-inherit-from-error-or-be-a-simple-predicate-function">Error: Catch filter must inherit from Error or be a simple predicate function</a></li>
+  <li><a href="#error-no-async-scheduler-available">Error: No async scheduler available</a></li>
+</ul>
+
+<h2 id="error-promisepromisify-called-on-an-object">Error: Promise.promisify called on an object</h2>
+
+<p>You got this this error because you’ve used <code class="highlighter-rouge">Promise.promisify</code> on an object, for example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">promisify</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"fs"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>Instead, use <a href="."><code class="highlighter-rouge">Promise.promisifyAll</code></a> :</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"fs"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h2 id="error-the-promise-constructor-requires-a-resolver-function">Error: the promise constructor requires a resolver function</h2>
+
+<p>You got this error because you used <code class="highlighter-rouge">new Promise()</code> or <code class="highlighter-rouge">new Promise(something)</code> without passing a function as the parameter.</p>
+
+<p>If you want to wrap an API with a promise manually, the correct syntax is:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">wrapWithPromise</span><span class="p">(</span><span class="nx">parameter</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">doSomethingAsync</span><span class="p">({</span>
+              <span class="na">error</span><span class="p">:</span><span class="nx">reject</span><span class="p">,</span>
+              <span class="na">success</span><span class="p">:</span><span class="nx">resolve</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Please consider reading about <a href=".">new Promise</a> and also consider checking out automatic <a href=".">promisification</a> as well as <a href=".">Promise.method</a></p>
+
+<h2 id="error-the-promise-constructor-cannot-be-invoked-directly">Error: the promise constructor cannot be invoked directly</h2>
+
+<p>You can get this error for several reasons:</p>
+
+<h4 id="1-you-forgot-to-use-new-when-creating-a-new-promise-using-new-promiseresolver-syntax">1. You forgot to use <code class="highlighter-rouge">new</code> when creating a new promise using <code class="highlighter-rouge">new Promise(resolver)</code> syntax.</h4>
+
+<p>This can happen when you tried to do something like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return Promise(function(resolve,reject){
+       //...
+})
+</code></pre></div></div>
+
+<p>You can correct this by doing:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>return new Promise(function(resolve,reject){
+       //...
+})
+</code></pre></div></div>
+
+<p>Please consider reading about <a href=".">new Promise</a> and also consider checking out automatic <a href=".">promisification</a> as well as <a href=".">Promise.method</a></p>
+
+<h4 id="2-you-are-trying-to-subclass-promise">2. You are trying to subclass <code class="highlighter-rouge">Promise</code></h4>
+
+<p>Bluebird does not support extending promises this way. Instead, see <a href="features.html#scoped-prototypes">scoped prototypes</a>.</p>
+
+<h2 id="error-expecting-an-array-a-promise-or-a-thenable">Error: expecting an array, a promise or a thenable</h2>
+
+<p>The function being called expects a Promise, but is given something different. There are two main reasons why this may occur.</p>
+
+<p><strong>1. Working with collections (like arrays) but pass a single, non-collection element instead</strong></p>
+
+<p>Example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">returnThree</span><span class="p">(){</span> <span class="k">return</span> <span class="mi">3</span><span class="p">;}</span>
+
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">returnThree</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">){</span>
+     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Hello Value!"</span><span class="p">,</span><span class="nx">val</span><span class="p">);</span> 
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">map</code> operation is expecting an array here (or a promise on one) and instead gets the number <code class="highlighter-rouge">5</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">returnThree</span><span class="p">(){</span> <span class="k">return</span> <span class="mi">3</span><span class="p">;}</span>
+
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">([</span><span class="mi">5</span><span class="p">]).</span><span class="nx">map</span><span class="p">(</span><span class="nx">returnThree</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">){</span>
+     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Hello Value!"</span><span class="p">,</span><span class="nx">val</span><span class="p">);</span> 
+<span class="p">});</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">map</code> is given an array with a single element (see <code class="highlighter-rouge">[5]</code> instead of <code class="highlighter-rouge">5</code>), so this statement will work (but is bad practice).</p>
+
+<hr />
+
+<p><strong>2.<code class="highlighter-rouge">return</code> is forgotten in a ‘fat’ arrow / anonymous function call <code class="highlighter-rouge">=&gt;</code>:</strong></p>
+
+<p>When debugging or performing a one-time operation on a variable before passing it to a function, a return variable is forgotten.</p>
+
+<p>Example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">nextFunction</span><span class="p">(</span><span class="nx">something</span><span class="p">){</span> <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">something</span><span class="o">*</span><span class="mi">3</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="nx">myFunction</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">result</span> <span class="o">=&gt;</span> <span class="nx">nextFunction</span><span class="p">(</span><span class="nx">result</span><span class="p">));</span> <span class="c1">// We are implicitly returning a Promise</span>
+</code></pre></div></div>
+
+<p>Debugging, we want to see the value of result, so we add a <code class="highlighter-rouge">console.log()</code> line:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">nextFunction</span><span class="p">(</span><span class="nx">something</span><span class="p">){</span> <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">something</span><span class="o">*</span><span class="mi">3</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="nx">myFunction</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">result</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Debug:"</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+    <span class="nx">nextFunction</span><span class="p">(</span><span class="nx">result</span><span class="p">));</span> <span class="c1">// The chain is broken! We don't return anything to the .then() call</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>As this is an anonymous function call, we need to <strong>return</strong> something, which is not currently happening.</p>
+
+<p>To fix, simply remember to add <code class="highlighter-rouge">return</code> in front of your promise-complying function:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">nextFunction</span><span class="p">(</span><span class="nx">something</span><span class="p">){</span> <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">something</span><span class="o">*</span><span class="mi">3</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="nx">myFunction</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">result</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Debug:"</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">nextFunction</span><span class="p">(</span><span class="nx">result</span><span class="p">));</span> <span class="c1">// The anonymous function returns the function which returns the promise .then() needs</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="error-generatorfunction-must-be-a-function">Error: generatorFunction must be a function</h2>
+
+<p>You are getting this error when trying to use <a href=".">Promise.coroutine</a> and not passing it a generator function as a parameter.  For example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Promise</span><span class="p">.</span><span class="nx">coroutine</span><span class="p">(</span><span class="kd">function</span><span class="o">*</span> <span class="p">()</span> <span class="p">{</span> <span class="c1">// Note the *</span>
+    <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">yield</span> <span class="nx">$</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">"http://www.example.com"</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">moreUrls</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">"</span><span class="err">\</span><span class="s2">n"</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">moreUrls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">contents</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">yield</span> <span class="nx">$</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">moreUrls</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">contents</span><span class="p">;</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Please refer to the relevant section in the documentation about <a href=".">Generators</a> in order to get usage instructions:</p>
+
+<p><strong>Note</strong>: Bluebird used to eagerly check for generators which caused problems with transpilers. Because of this, you might get an error similar to <code class="highlighter-rouge">TypeError: Cannot read property 'next' of undefined</code> if you pass a function instead of a generator function to Bluebird.</p>
+
+<p><a href=".">Promise.coroutine</a> is built to work with generators to form C# like <code class="highlighter-rouge">async/await</code></p>
+
+<h2 id="error-fn-must-be-a-function">Error: fn must be a function</h2>
+
+<p>You passed a non-function where a function was expected.</p>
+
+<h2 id="error-cannot-enable-long-stack-traces-after-promises-have-been-created">Error: cannot enable long stack traces after promises have been created</h2>
+
+<p>You are getting this error because you are enabling long stack traces after a promise has already been created.</p>
+
+<p>When using <code class="highlighter-rouge">longStackTraces</code> the first line in your code after requiring Bluebird should be:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Promise</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
+    <span class="na">longStackTraces</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>See the API page about <a href=".">Promise.longStackTraces</a></p>
+
+<h2 id="error-cannot-get-fulfillment-value-of-a-non-fulfilled-promise">Error: cannot get fulfillment value of a non-fulfilled promise</h2>
+
+<p>You can get this error when you’re trying to call <code class="highlighter-rouge">.value</code> or <code class="highlighter-rouge">.error</code> when inspecting a promise where the promise has not been fulfilled or rejected yet.</p>
+
+<p>For example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="nx">p</span><span class="p">.</span><span class="nx">inspect</span><span class="p">().</span><span class="nx">value</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>Consider using <a href=".">.isPending()</a> <a href=".">.isFulfilled()</a> and <a href=".">.isRejected()</a> in order to inspect the promise for status.</p>
+
+<p>Please consider reading more about <a href=".">synchronous inspection</a></p>
+
+<h2 id="error-cannot-get-rejection-reason-of-a-non-rejected-promise">Error: cannot get rejection reason of a non-rejected promise</h2>
+
+<p>You can get this error when you’re trying to call <code class="highlighter-rouge">.value</code> or <code class="highlighter-rouge">.error</code> when inspecting a promise where the promise has not been fulfilled or rejected yet.</p>
+
+<p>For example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="nx">p</span><span class="p">.</span><span class="nx">inspect</span><span class="p">().</span><span class="nx">value</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>Consider using <a href=".">.isPending()</a> <a href=".">.isFulfilled()</a> and <a href=".">.isRejected()</a> in order to inspect the promise for status.</p>
+
+<p>Please consider reading more about <a href=".">synchronous inspection</a></p>
+
+<p>##Error: the target of promisifyAll must be an object or a function</p>
+
+<p>This can happen when you are calling <a href=".">Promise.promisifyAll</a> on a function and invoking it instead of passing it.</p>
+
+<p>In general, the usage of <a href=".">Promise.promisifyAll</a> is along the lines of <code class="highlighter-rouge">var fs = Promise.promisifyAll(require("fs"))</code>.</p>
+
+<p>Consider reading the section about <a href=".">promisification</a></p>
+
+<h2 id="error-circular-promise-resolution-chain">Error: circular promise resolution chain</h2>
+
+<p>This usually happens when you have a promise that resolves or rejects with itself.</p>
+
+<p>For example: <code class="highlighter-rouge">var p = Promise.delay(100).then(function(){ return p});</code> .</p>
+
+<p>In this case, the promise resolves with itself which was is not intended.</p>
+
+<p>This also happens when implementing live-updating models with a <code class="highlighter-rouge">.then</code> method that indicates when the model is “ready”. A promise is a process, it starts and it ends.</p>
+
+<p>Promises do not aim to solve such live updating problems directly. One option would be to use an intermediate promise - for example a <code class="highlighter-rouge">.loaded</code> property on the model that fulfills with nothing.</p>
+
+<p>resolving it with itself tells it “it is done when it is done”</p>
+
+<h2 id="error-cannot-await-properties-of-a-non-object">Error: cannot await properties of a non-object</h2>
+
+<p>The <code class="highlighter-rouge">.props</code> method expects to receive an object.</p>
+
+<p>For example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Promise</span><span class="p">.</span><span class="nx">props</span><span class="p">({</span>
+    <span class="na">pictures</span><span class="p">:</span> <span class="nx">getPictures</span><span class="p">(),</span>
+    <span class="na">comments</span><span class="p">:</span> <span class="nx">getComments</span><span class="p">(),</span>
+    <span class="na">tweets</span><span class="p">:</span> <span class="nx">getTweets</span><span class="p">()</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">tweets</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">pictures</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">comments</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This happens when a non object value or a promise that resolves with something that is not an object is being passed instead.</p>
+
+<h2 id="error-expecting-a-positive-integer">Error: expecting a positive integer</h2>
+
+<p>This happens when you call <code class="highlighter-rouge">.some</code> passing it a negative value or a non-integer.</p>
+
+<p>One possible cause is using <code class="highlighter-rouge">.indexOf</code> which returns <code class="highlighter-rouge">-1</code> when it doesn’t find the value being searched for.</p>
+
+<p>Please consider reading the API docs for <a href="."><code class="highlighter-rouge">.some</code></a></p>
+
+<h2 id="error-a-value-was-yielded-that-could-not-be-treated-as-a-promise">Error: A value was yielded that could not be treated as a promise</h2>
+
+<p>You are getting this error because you have tried to <code class="highlighter-rouge">yield</code> something in a coroutine without a yield handler, for example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">coroutine</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">coroutine</span><span class="p">(</span><span class="kd">function</span><span class="o">*</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">bar</span> <span class="o">=</span> <span class="k">yield</span> <span class="s2">"Foo"</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bar</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>The solution is to either convert it to a promise by calling <code class="highlighter-rouge">Promise.resolve</code> on it or <code class="highlighter-rouge">Promise.promisify</code> if it’s a callback:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">coroutine</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">coroutine</span><span class="p">(</span><span class="kd">function</span><span class="o">*</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">bar</span> <span class="o">=</span> <span class="k">yield</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">"Foo"</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bar</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Or to use <a href=".">Promise.coroutine.addYieldHandler`</a> to teach <a href=".">Promise.coroutine</a> to accept these sort of values.</p>
+
+<h2 id="error-cannot-await-properties-of-a-non-object-1">Error: cannot await properties of a non object</h2>
+
+<p>The <code class="highlighter-rouge">.props</code> method expects to receive an object.</p>
+
+<p>For example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Promise</span><span class="p">.</span><span class="nx">props</span><span class="p">({</span>
+    <span class="na">pictures</span><span class="p">:</span> <span class="nx">getPictures</span><span class="p">(),</span>
+    <span class="na">comments</span><span class="p">:</span> <span class="nx">getComments</span><span class="p">(),</span>
+    <span class="na">tweets</span><span class="p">:</span> <span class="nx">getTweets</span><span class="p">()</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">tweets</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">pictures</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">comments</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This happens when a non object value or a promise that resolves with something that is not an object is being passed instead.</p>
+
+<h2 id="error-cannot-promisify-an-api-that-has-normal-methods">Error: Cannot promisify an API that has normal methods</h2>
+
+<p>This error indicates you have tried to call <a href=".">Promise.promisifyAll</a> on an object that already has a property with the <code class="highlighter-rouge">Async</code> suffix:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">myApi</span> <span class="o">=</span> <span class="p">{</span> <span class="na">foo</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">){</span> <span class="p">...</span> <span class="p">},</span> <span class="nx">fooAsync</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is because Bluebird adds the <code class="highlighter-rouge">Async</code> suffix to distinguish the original method from the promisified one, so <code class="highlighter-rouge">fooAsync</code> would have been overridden. In order to avoid this - either rename <code class="highlighter-rouge">fooAsync</code> before promisifying the API, or call <a href=".">Promise.promisify</a> manually on select properties.</p>
+
+<p>You may also use the custom suffix option to choose another suffix that doesn’t result in conflicts.</p>
+
+<p>If you find this issue in a common library please <a href="https://github.com/petkaantonov/bluebird/issues/new">open an issue</a>.</p>
+
+<h2 id="error-catch-filter-must-inherit-from-error-or-be-a-simple-predicate-function">Error: Catch filter must inherit from Error or be a simple predicate function</h2>
+
+<p>Bluebird supports typed and predicate <a href=".">.catch()</a> calls]. However in order to use the typed/predicate catch syntax for error handling you must do one of two things.</p>
+
+<p>Pass it a constructor that inherits from <code class="highlighter-rouge">Error</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>}).catch(ReferenceError, function(e) { // this is fine
+}).catch(Array, function(e) { // arrays don't capture stack traces
+</code></pre></div></div>
+
+<p>This is to enable better stack trace support and to have more consistent and logical code.</p>
+
+<p>Alternatively, if you provide it a predicate be sure it’s a simple function:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>}).catch(function(e){ return false; }, function(e) { // this catches nothing
+}).catch(function(e){ return e.someProp = 5; }, function(e) { // this is fine
+</code></pre></div></div>
+
+<p>Please see the API docs of <a href=".">.catch()</a> on how to use predicate catches.</p>
+
+<h2 id="error-no-async-scheduler-available">Error: No async scheduler available</h2>
+
+<p>Async scheduler is a function that takes a callback function and calls the callback function as soon as possible, but asynchronously. For example <code class="highlighter-rouge">setTimeout</code>.</p>
+
+<p>By default bluebird only tries a few common async schedulers, such as <code class="highlighter-rouge">setTimeout</code>, <code class="highlighter-rouge">process.nextTick</code> and <code class="highlighter-rouge">MutationObserver</code>. However if your JavaScript runtime environment doesn’t expose any of these, you will see this error.</p>
+
+<p>You may use <a href=".">Promise.setScheduler</a> to pass a custom scheduler that your environment supports. For example in DukTape:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Promise</span><span class="p">.</span><span class="nx">setScheduler</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">fn</span><span class="p">){</span> <span class="c1">// fn is what to execute</span>
+    <span class="kd">var</span> <span class="nx">timer</span> <span class="o">=</span> <span class="nx">uv</span><span class="p">.</span><span class="nx">new_timer</span><span class="p">.</span><span class="nx">call</span><span class="p">({});</span>
+    <span class="nx">uv</span><span class="p">.</span><span class="nx">timer_start</span><span class="p">(</span><span class="nx">timer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">fn</span><span class="p">);</span> <span class="c1">// add the function as a callback to the timer</span>
+<span class="p">});</span>
+</code></pre></div></div>
+

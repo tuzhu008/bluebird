@@ -1,0 +1,79 @@
+<ul>
+  <li><a href="#browser-installation">Browser installation</a></li>
+  <li><a href="#node-installation">Node installation</a></li>
+  <li><a href="#supported-platforms">Supported platforms</a></li>
+</ul>
+
+<p>##Browser installation</p>
+
+<p>Download <a href="https://cdn.jsdelivr.net/bluebird//bluebird.js">bluebird  (development)</a></p>
+
+<p>Unminified source file meant to be used in development. Warnings and long stack traces are enabled which are taxing on performance.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//cdn.jsdelivr.net/bluebird//bluebird.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p>Download <a href="https://cdn.jsdelivr.net/bluebird//bluebird.min.js">bluebird  (production)</a></p>
+
+<p>Minified source file meant to be used in production. Warnings and long straces are disabled. The gzipped size is 17.76KB.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//cdn.jsdelivr.net/bluebird//bluebird.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p>Unless an AMD loader is installed, the script tag installation exposes the library in the <code class="highlighter-rouge">Promise</code> and <code class="highlighter-rouge">P</code> namespaces. If you want to restore the <code class="highlighter-rouge">Promise</code> namespace, use <code class="highlighter-rouge">var Bluebird = Promise.noConflict()</code>.</p>
+
+<p>###Bower</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bower install --save bluebird
+</code></pre></div></div>
+
+<p>###Browserify and Webpack</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save bluebird
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="c1">// Configure</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
+    <span class="na">longStackTraces</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">warnings</span><span class="p">:</span> <span class="kc">true</span> <span class="c1">// note, run node with --trace-warnings to see full stack traces for warnings</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>##Node installation</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save bluebird
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>To enable long stack traces and warnings in node development:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ NODE_ENV=development node server.js
+</code></pre></div></div>
+
+<p>To enable long stack traces and warnings in node production:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ BLUEBIRD_DEBUG=1 node server.js
+</code></pre></div></div>
+
+<p>See <a href=".">Environment Variables</a>.</p>
+
+<p>##Supported platforms</p>
+
+<p>Bluebird officially supports and is tested on node.js, iojs and browsers starting from IE7. Unofficial platforms are supported with best effort only.</p>
+
+<p>IE7 and IE8 do not support using keywords as property names, so if supporting these browsers is required you need to use the compatibility aliases:</p>
+
+<ul>
+  <li><a href="."><code class="highlighter-rouge">Promise.try()</code></a> -&gt; <code class="highlighter-rouge">Promise.attempt()</code></li>
+  <li><a href="."><code class="highlighter-rouge">.catch()</code></a> -&gt; <code class="highlighter-rouge">.caught()</code></li>
+  <li><a href="."><code class="highlighter-rouge">.finally()</code></a> -&gt; <code class="highlighter-rouge">.lastly()</code></li>
+  <li><a href="."><code class="highlighter-rouge">.return()</code></a> -&gt; <code class="highlighter-rouge">.thenReturn()</code></li>
+  <li><a href="."><code class="highlighter-rouge">.throw()</code></a> -&gt; <code class="highlighter-rouge">.thenThrow()</code></li>
+</ul>
+
+<p>Long stack traces are only supported in Chrome, recent Firefoxes and Internet Explorer 10+</p>
+
+<p><a href="https://saucelabs.com/u/petka_antonov"><img src="https://saucelabs.com/browser-matrix/petka_antonov.svg" alt="Selenium Test Status" /></a></p>

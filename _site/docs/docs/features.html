@@ -1,0 +1,309 @@
+<p><a href="unfinished-article">features</a></p>
+
+<ul>
+  <li><a href="#synchronous-inspection">Synchronous inspection</a></li>
+  <li><a href="#concurrency-coordination">Concurrency coordination</a></li>
+  <li><a href="#promisification-on-steroids">Promisification on steroids</a></li>
+  <li><a href="#debuggability-and-error-handling">Debuggability and error handling</a></li>
+  <li><a href="#resource-management">Resource management</a></li>
+  <li><a href="#cancellation-and-timeouts">Cancellation and timeouts</a></li>
+  <li><a href="#scoped-prototypes">Scoped prototypes</a></li>
+  <li><a href="#promise-monitoring">Promise monitoring</a></li>
+  <li><a href="#async-await">Async/Await</a></li>
+</ul>
+
+<p>##Synchronous inspection</p>
+
+<p>Synchronous inspection allows you to retrieve the fulfillment value of an already fulfilled promise or the rejection reason of an already rejected promise synchronously.</p>
+
+<p>Often it is known in certain code paths that a promise is guaranteed to be fulfilled at that point - it would then be extremely inconvenient to use <a href="."><code class="highlighter-rouge">.then</code></a> to get at the promise’s value as the callback is always called asynchronously.</p>
+
+<p>See the API on <a href=".">synchronous inspection</a> for more information.</p>
+
+<p>##Concurrency coordination</p>
+
+<p>Through the use of <a href=".">.each</a> and <a href=".">.map</a> doing things just at the right concurrency level becomes a breeze.</p>
+
+<p>##Promisification on steroids</p>
+
+<p>Promisification means converting an existing promise-unaware API to a promise-returning API.</p>
+
+<p>The usual way to use promises in node is to <a href=".">Promise.promisifyAll</a> some API and start exclusively calling promise returning versions of the APIs methods. E.g.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"fs"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">fs</span><span class="p">);</span>
+<span class="c1">// Now you can use fs as if it was designed to use bluebird promises from the beginning</span>
+
+<span class="nx">fs</span><span class="p">.</span><span class="nx">readFileAsync</span><span class="p">(</span><span class="s2">"file.js"</span><span class="p">,</span> <span class="s2">"utf8"</span><span class="p">).</span><span class="nx">then</span><span class="p">(...)</span>
+</code></pre></div></div>
+
+<p>Note that the above is an exceptional case because <code class="highlighter-rouge">fs</code> is a singleton instance. Most libraries can be promisified by requiring the library’s classes (constructor functions) and calling promisifyAll on the <code class="highlighter-rouge">.prototype</code>. This only needs to be done once in the entire application’s lifetime and after that you may use the library’s methods exactly as they are documented, except by appending the <code class="highlighter-rouge">"Async"</code>-suffix to method calls and using the promise interface instead of the callback interface.</p>
+
+<p>As a notable exception in <code class="highlighter-rouge">fs</code>, <code class="highlighter-rouge">fs.existsAsync</code> doesn’t work as expected, because Node’s <code class="highlighter-rouge">fs.exists</code> doesn’t call back with error as first argument.  More at <a href=".">#418</a>.  One possible workaround is using <code class="highlighter-rouge">fs.statAsync</code>.</p>
+
+<p>Some examples of the above practice applied to some popular libraries:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// The most popular redis module</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"redis"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// The most popular mongodb module</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"mongodb"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// The most popular mysql module</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="c1">// Note that the library's classes are not properties of the main export</span>
+<span class="c1">// so we require and promisifyAll them manually</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"mysql/lib/Connection"</span><span class="p">).</span><span class="nx">prototype</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"mysql/lib/Pool"</span><span class="p">).</span><span class="nx">prototype</span><span class="p">);</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Mongoose</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"mongoose"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Request</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"request"</span><span class="p">));</span>
+<span class="c1">// Use request.getAsync(...) not request(..), it will not return a promise</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// mkdir</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"mkdirp"</span><span class="p">));</span>
+<span class="c1">// Use mkdirp.mkdirpAsync not mkdirp(..), it will not return a promise</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// winston</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"winston"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// rimraf</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="c1">// The module isn't promisified but the function returned is</span>
+<span class="kd">var</span> <span class="nx">rimrafAsync</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">promisify</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"rimraf"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// xml2js</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"xml2js"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// jsdom</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"jsdom"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// fs-extra</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"fs-extra"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// prompt</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"prompt"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Nodemailer</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"nodemailer"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ncp</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"ncp"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// pg</span>
+<span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"pg"</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>In all of the above cases the library made its classes available in one way or another. If this is not the case, you can still promisify by creating a throwaway instance:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">ParanoidLib</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"..."</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">throwAwayInstance</span> <span class="o">=</span> <span class="nx">ParanoidLib</span><span class="p">.</span><span class="nx">createInstance</span><span class="p">();</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">throwAwayInstance</span><span class="p">));</span>
+<span class="c1">// Like before, from this point on, all new instances + even the throwAwayInstance suddenly support promises</span>
+</code></pre></div></div>
+
+<p>See also <a href="."><code class="highlighter-rouge">Promise.promisifyAll</code></a>.</p>
+
+<p>##Debuggability and error handling</p>
+
+<ul>
+  <li><a href="#surfacing-unhandled-errors">Surfacing unhandled errors</a></li>
+  <li><a href="#long-stack-traces">Long stack traces</a></li>
+  <li><a href="#error-pattern-matching">Error pattern matching</a></li>
+  <li><a href="#warnings">Warnings</a></li>
+</ul>
+
+<p>###Surfacing unhandled errors</p>
+
+<p>The default approach of bluebird is to immediately log the stack trace when there is an unhandled rejection. This is similar to how uncaught exceptions cause the stack trace to be logged so that you have something to work with when something is not working as expected.</p>
+
+<p>However because it is possible to handle a rejected promise at any time in the indeterminate future, some programming patterns will result in false positives. Because such programming patterns are not necessary and can always be refactored to never cause false positives, we recommend doing that to keep debugging as easy as possible . You may however feel differently so bluebird provides hooks to implement more complex failure policies.</p>
+
+<p>Such policies could include:</p>
+
+<ul>
+  <li>Logging after the promise became GCd (requires a native node.js module)</li>
+  <li>Showing a live list of rejected promises</li>
+  <li>Using no hooks and using <a href="."><code class="highlighter-rouge">.done</code></a> to manually to mark end points where rejections will not be handled</li>
+  <li>Swallowing all errors (challenge your debugging skills)</li>
+  <li>…</li>
+</ul>
+
+<p>See <a href="http://bluebirdjs.com/docs/api/error-management-configuration.html#global-rejection-events">global rejection events</a> to learn more about the hooks.</p>
+
+<p>###Long stack traces</p>
+
+<p>Normally stack traces don’t go beyond asynchronous boundaries so their utility is greatly reduced in asynchronous code:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">a</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span><span class="p">;</span>
+        <span class="p">},</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">},</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ReferenceError: a is not defined
+    at null._onTimeout file.js:4:13
+    at Timer.listOnTimeout (timers.js:90:15)
+</code></pre></div></div>
+
+<p>Of course you could use hacks like monkey patching or domains but these break down when something can’t be monkey patched or new apis are introduced.</p>
+
+<p>Since in bluebird <a href=".">promisification</a> is made trivial, you can get long stack traces all the time:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird"</span><span class="p">);</span>
+
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">a</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span><span class="p">;</span>
+    <span class="p">});</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Unhandled rejection ReferenceError: a is not defined
+    at file.js:6:9
+    at processImmediate [as _immediateCallback] (timers.js:321:17)
+From previous event:
+    at Object.&lt;anonymous&gt; (file.js:5:15)
+    at Module._compile (module.js:446:26)
+    at Object.Module._extensions..js (module.js:464:10)
+    at Module.load (module.js:341:32)
+    at Function.Module._load (module.js:296:12)
+    at Function.Module.runMain (module.js:487:10)
+    at startup (node.js:111:16)
+    at node.js:799:3
+</code></pre></div></div>
+
+<p>And there is more. Bluebird’s long stack traces additionally eliminate cycles, don’t leak memory, are not limited to a certain amount of asynchronous boundaries and are fast enough for most applications to be used in production. All these are non-trivial problems that haunt straight-forward long stack trace implementations.</p>
+
+<p>See <a href="install.html">installation</a> on how to enable long stack traces in your environment.</p>
+
+<p>###Error pattern matching</p>
+
+<p>Perhaps the greatest thing about promises is that it unifies all error handling into one mechanism where errors propagate automatically and have to be explicitly ignored.</p>
+
+<p>###Warnings</p>
+
+<p>Promises can have a steep learning curve and it doesn’t help that promise standards go out of their way to make it even harder. Bluebird works around the limitations by providing warnings where the standards disallow throwing errors when incorrect usage is detected. See <a href="warning-explanations.html">Warning Explanations</a> for the possible warnings that bluebird covers.</p>
+
+<p>See <a href="install.html">installation</a> on how to enable warnings in your environment.</p>
+
+<p>Note - in order to get full stack traces with warnings in Node 6.x+ you need to enable to <code class="highlighter-rouge">--trace-warnings</code> flag which will give you a full stack trace of where the warning is coming from.</p>
+
+<p>###Promise monitoring</p>
+
+<p>This feature enables subscription to promise lifecycle events via standard global events mechanisms in browsers and Node.js.</p>
+
+<p>The following lifecycle events are available:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">"promiseCreated"</code> - Fired when a promise is created through the constructor.</li>
+  <li><code class="highlighter-rouge">"promiseChained"</code> - Fired when a promise is created through chaining (e.g. <a href=".">.then</a>).</li>
+  <li><code class="highlighter-rouge">"promiseFulfilled"</code> - Fired when a promise is fulfilled.</li>
+  <li><code class="highlighter-rouge">"promiseRejected"</code> - Fired when a promise is rejected.</li>
+  <li><code class="highlighter-rouge">"promiseResolved"</code> - Fired when a promise adopts another’s state.</li>
+  <li><code class="highlighter-rouge">"promiseCancelled"</code> - Fired when a promise is cancelled.</li>
+</ul>
+
+<p>This feature has to be explicitly enabled by calling <a href=".">Promise.config</a> with <code class="highlighter-rouge">monitoring: true</code>.</p>
+
+<p>The actual subscription API depends on the environment.</p>
+
+<p>1. In Node.js, use <code class="highlighter-rouge">process.on</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Note the event name is in camelCase, as per Node.js convention.</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">"promiseChained"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">promise</span><span class="p">,</span> <span class="nx">child</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// promise - The parent promise the child was chained from</span>
+    <span class="c1">// child - The created child promise.</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>2. In modern browsers use <code class="highlighter-rouge">window.addEventListener</code> (window context) or <code class="highlighter-rouge">self.addEventListener()</code> (web worker or window context) method:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Note the event names are in mashedtogetherlowercase, as per DOM convention.</span>
+<span class="nb">self</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"promisechained"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// event.details.promise - The parent promise the child was chained from</span>
+    <span class="c1">// event.details.child - The created child promise.</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>3. In legacy browsers use <code class="highlighter-rouge">window.oneventname = handlerFunction;</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Note the event names are in mashedtogetherlowercase, as per legacy convention.</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">onpromisechained</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">promise</span><span class="p">,</span> <span class="nx">child</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// event.details.promise - The parent promise the child was chained from</span>
+    <span class="c1">// event.details.child - The created child promise.</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>##Resource management</p>
+
+<p>##Cancellation and timeouts</p>
+
+<p>See <a href="."><code class="highlighter-rouge">Cancellation</code></a> for how to use cancellation.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Enable cancellation</span>
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span><span class="na">cancellation</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">promisifyAll</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">"fs"</span><span class="p">));</span>
+
+<span class="c1">// In 2000ms or less, load &amp; parse a file 'config.json'</span>
+<span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s1">'./config.json'</span><span class="p">)</span>
+ <span class="p">.</span><span class="nx">timeout</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+ <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">console</span><span class="p">,</span> <span class="s1">'Failed to load config!'</span><span class="p">))</span>
+ <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileAsync</span><span class="p">)</span>
+ <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">);</span>
+<span class="c1">// Listen for exception event to trigger promise cancellation</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'unhandledException'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+ <span class="c1">// cancel config loading</span>
+ <span class="nx">p</span><span class="p">.</span><span class="nx">cancel</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>##Scoped prototypes</p>
+
+<p>Building a library that depends on bluebird? You should know about the “scoped prototype” feature.</p>
+
+<p>If your library needs to do something obtrusive like adding or modifying methods on the <code class="highlighter-rouge">Promise</code> prototype, uses long stack traces or uses a custom unhandled rejection handler then… that’s totally ok as long as you don’t use <code class="highlighter-rouge">require("bluebird")</code>. Instead you should create a file
+that creates an isolated copy. For example, creating a file called <code class="highlighter-rouge">bluebird-extended.js</code> that contains:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                <span class="c1">//NOTE the function call right after</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"bluebird/js/main/promise"</span><span class="p">)();</span>
+</code></pre></div></div>
+
+<p>Your library can then use <code class="highlighter-rouge">var Promise = require("bluebird-extended");</code> and do whatever it wants with it. Then if the application or other library uses their own bluebird promises they will all play well together because of Promises/A+ thenable assimilation magic.</p>
+
+<p>##Async/Await</p>
+

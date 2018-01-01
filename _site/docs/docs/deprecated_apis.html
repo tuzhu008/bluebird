@@ -1,0 +1,98 @@
+<p>This file contains documentation for APIs that are no longer supported by Bluebird.
+These APIs still work in Bluebird but will be removed at a future version of the library.</p>
+
+<p>For every use case that the methods below solve there exists a better alternative in <a href="./API.md">the API reference</a>.</p>
+
+<ul>
+  <li><a href="#progression">Progression</a>
+    <ul>
+      <li><a href="#.progressed"><code class="highlighter-rouge">.progressed(Function handler)</code></a></li>
+      <li><a href="#.then"><code class="highlighter-rouge">.then([Function fulfilledHandler] [, Function rejectedHandler ] [, Function progressHandler ])</code></a></li>
+      <li><a href="#.done"><code class="highlighter-rouge">.done([Function fulfilledHandler] [, Function rejectedHandler ] [, Function progressHandler ])</code></a></li>
+      <li><a href="#.fork"><code class="highlighter-rouge">.fork([Function fulfilledHandler] [, Function rejectedHandler ] [, Function progressHandler ])</code></a></li>
+    </ul>
+  </li>
+  <li><a href="#promise-resolution">Promise resolution</a>
+    <ul>
+      <li><a href="#.resolve"><code class="highlighter-rouge">.resolve(dynamic value)</code></a></li>
+      <li><a href="#.reject"><code class="highlighter-rouge">.reject(dynamic reason)</code></a></li>
+      <li><a href="#.progress"><code class="highlighter-rouge">.progress(dynamic value)</code></a></li>
+      <li><a href="#.callback"><code class="highlighter-rouge">.callback</code></a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>##Progression</p>
+
+<p>The old progression API was meant to be used for tracking the progress of promise resolution. In retrospect, it did not work or compose very well. We understand that problem better now and the use case could be better solved without it.</p>
+
+<p>See <a href="./API.md#progression-migration">Progression Migration</a> for migration assistance and examples of how to convert APIs that use progression to ones that do not.</p>
+
+<p>#####<code class="highlighter-rouge">.progressed(Function handler)</code> -&gt; <code class="highlighter-rouge">Promise</code></p>
+
+<p>Shorthand for <a href="."><code class="highlighter-rouge">.then(null, null, handler);</code></a>. Attach a progress handler that will be called if this promise is progressed. Returns a new promise chained from this promise.</p>
+
+<hr />
+
+<p>#####<code class="highlighter-rouge">.then([Function fulfilledHandler] [, Function rejectedHandler ] [, Function progressHandler ])</code> -&gt; <code class="highlighter-rouge">Promise</code></p>
+
+<p>The standard <a href="http://promises-aplus.github.io/promises-spec/">Promises/A+ <code class="highlighter-rouge">.then()</code></a> is still supported by Bluebird and support for it will continue indefinitely. However, the variant accepting a third <code class="highlighter-rouge">progressHandler</code> argument is no longer supported.</p>
+
+<hr />
+
+<p>#####<code class="highlighter-rouge">.done([Function fulfilledHandler] [, Function rejectedHandler ] [, Function progressHandler ])</code> -&gt; <code class="highlighter-rouge">void</code></p>
+
+<p>Like <a href="."><code class="highlighter-rouge">.then()</code></a>, but any unhandled rejection that ends up here will be thrown as an error. Again, only the variant with the progression handler is deprecated here. <code class="highlighter-rouge">.done</code> is still fully supported.</p>
+
+<hr />
+
+<p>#####<code class="highlighter-rouge">.fork([Function fulfilledHandler] [, Function rejectedHandler ] [, Function progressHandler ])</code> -&gt; <code class="highlighter-rouge">Promise</code></p>
+
+<p>Like <a href="."><code class="highlighter-rouge">.then()</code></a>, but cancellation of the returned promise or any of its descendant will not propagate cancellation to this promise or this promise’s ancestors. Again, only the variant with the progression handler is deprecated here. <code class="highlighter-rouge">.fork</code> is still fully supported.</p>
+
+<hr />
+
+<p>##Promise resolution</p>
+
+<p>A <code class="highlighter-rouge">PromiseResolver</code> can be used to control the fate of a promise. It is like “Deferred” in jQuery or <code class="highlighter-rouge">$q.defer</code> in $q. The <code class="highlighter-rouge">PromiseResolver</code> objects have a <code class="highlighter-rouge">.promise</code> property which is a reference to the controlled promise that can be passed to clients. <code class="highlighter-rouge">.promise</code> of a <code class="highlighter-rouge">PromiseResolver</code> is not a getter function to match other implementations.</p>
+
+<p>The methods of a <code class="highlighter-rouge">PromiseResolver</code> have no effect if the fate of the underlying promise is already decided (follow, reject, fulfill).</p>
+
+<p><strong>The use of <code class="highlighter-rouge">Promise.defer</code> and deferred objects is discouraged - it is much more awkward and error-prone than using <code class="highlighter-rouge">new Promise</code>.</strong></p>
+
+<hr />
+
+<p>#####<code class="highlighter-rouge">.resolve(dynamic value)</code> -&gt; <code class="highlighter-rouge">undefined</code></p>
+
+<p>Resolve the underlying promise with <code class="highlighter-rouge">value</code> as the resolution value. If <code class="highlighter-rouge">value</code> is a thenable or a promise, the underlying promise will assume its state.</p>
+
+<hr />
+
+<p>#####<code class="highlighter-rouge">.reject(dynamic reason)</code> -&gt; <code class="highlighter-rouge">undefined</code></p>
+
+<p>Reject the underlying promise with <code class="highlighter-rouge">reason</code> as the rejection reason.</p>
+
+<hr />
+
+<p>#####<code class="highlighter-rouge">.progress(dynamic value)</code> -&gt; <code class="highlighter-rouge">undefined</code></p>
+
+<p>Progress the underlying promise with <code class="highlighter-rouge">value</code> as the progression value.</p>
+
+<p>Example</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">delay</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">resolver</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">now</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">resolver</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">now</span><span class="p">);</span>
+    <span class="p">},</span> <span class="nx">ms</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ms</span> <span class="o">+</span> <span class="s2">" ms passed"</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<hr />
+
