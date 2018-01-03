@@ -20,7 +20,7 @@ redcarpet:
   extensions:
     - fenced_code_blocks
 version: 3.5.1
-gems:
+plugins:
   - jekyll-redirect-from
 destination: ../gh-pages/
 keep_files:
