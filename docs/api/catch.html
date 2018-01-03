@@ -44,9 +44,9 @@
                     
 
                     <li class=""><a href="/bluebird_cn/docs/api-reference.html">API</a></li>
-                    <li class="active"><a href="/bluebird_cn/docs/getting-started.html">Docs</a></li>
-                    <li class=""><a href="/bluebird_cn/docs/support.html">Support</a></li>
-                    <li class=""><a href="/bluebird_cn/docs/install.html">Install</a></li>
+                    <li class="active"><a href="/bluebird_cn/docs/getting-started.html">文档</a></li>
+                    <li class=""><a href="/bluebird_cn/docs/support.html">支持</a></li>
+                    <li class=""><a href="/bluebird_cn/docs/install.html">安装</a></li>
                     <li><a href="https://github.com/petkaantonov/bluebird/">Github</a></li>
                 </ul>
             </div><!--/.navbar-collapse -->
@@ -57,17 +57,17 @@
       <div class="row">
         <div class="col-sm-3">
             <ul class="nav left-nav">
-                <li><a href="/bluebird_cn/docs/getting-started.html">Getting Started</a></li>
-                <li><a href="/bluebird_cn/docs/features.html">Features</a></li>
-                <li><a href="/bluebird_cn/docs/changelog.html">Changelog</a></li>
-                <li><a href="/bluebird_cn/docs/api-reference.html"><strong>API Reference</strong></a></li>
+                <li><a href="/bluebird_cn/docs/getting-started.html">开始</a></li>
+                <li><a href="/bluebird_cn/docs/features.html">特性</a></li>
+                <li><a href="/bluebird_cn/docs/changelog.html">更新日志</a></li>
+                <li><a href="/bluebird_cn/docs/api-reference.html"><strong>API 参考</strong></a></li>
                 <li><a href="/bluebird_cn/docs/new-in-bluebird-3.html"><strong>New in 3.0</strong></a></li>
-                <li><a href="/bluebird_cn/docs/warning-explanations.html">Warning Explanations</a></li>
-                <li><a href="/bluebird_cn/docs/error-explanations.html">Error Explanations</a></li>
-                <li><a href="/bluebird_cn/docs/contribute.html">Contribute</a></li>
+                <li><a href="/bluebird_cn/docs/warning-explanations.html">警告说明</a></li>
+                <li><a href="/bluebird_cn/docs/error-explanations.html">错误说明</a></li>
+                <li><a href="/bluebird_cn/docs/contribute.html">贡献</a></li>
                 <li><a href="/bluebird_cn/docs/benchmarks.html">Benchmarks</a></li>
-                <li><a href="/bluebird_cn/docs/deprecated-apis.html">Deprecated APIs</a></li>
-                <li><a href="/bluebird_cn/docs/download-api-reference.html">Download API Reference</a></li>
+                <li><a href="/bluebird_cn/docs/deprecated-apis.html">弃用的 API</a></li>
+                <li><a href="/bluebird_cn/docs/download-api-reference.html">下载 API 参考</a></li>
                 <li><hr></li>
                 <li>Why?
                     <ul class="nav nav-child">
@@ -79,20 +79,20 @@
                 </li>
                 <li><hr></li>
                 <li>
-                    Tutorials
+                    教程
                     <ul class="nav nav-child">
                         <li><a href="/bluebird_cn/docs/async-dialogs.html">Async Dialogs</a></li>
                     </ul>
                 </li>
                 <li><hr></li>
                 <li>
-                    Guides
+                    指南
                     <ul class="nav nav-child">
-                        <li><a href="/bluebird_cn/docs/beginners-guide.html">Beginner's Guide</a></li>
+                        <li><a href="/bluebird_cn/docs/beginners-guide.html">初学者指南</a></li>
                         <li><a href="/bluebird_cn/docs/anti-patterns.html">Anti-patterns</a></li>
-                        <li><a href="/bluebird_cn/docs/working-with-callbacks.html">Working with Callbacks</a></li>
-                        <li><a href="/bluebird_cn/docs/coming-from-other-languages.html">Coming from Other Languages</a></li>
-                        <li><a href="/bluebird_cn/docs/coming-from-other-libraries.html">Coming from Other Libraries</a></li>
+                        <li><a href="/bluebird_cn/docs/working-with-callbacks.html">使用回调</a></li>
+                        <li><a href="/bluebird_cn/docs/coming-from-other-languages.html">来自其他语言</a></li>
+                        <li><a href="/bluebird_cn/docs/coming-from-other-libraries.html">来自其他库</a></li>
                     </ul>
                 </li>
                 <li><hr></li>
@@ -100,7 +100,7 @@
                     <div class="supporters">
                         <div class="reaktor supporter">
                             <a href="https://reaktor.com">
-                                <img src="/img/supportlogo.png" alt="Supported by reaktor" title="Supported by Reaktor">
+                                <img src="/bluebird_cn/img/supportlogo.png" alt="Supported by reaktor" title="Supported by Reaktor">
                             </a>
                         </div>
                     </div>
@@ -111,17 +111,17 @@
         <div class="col-sm-9">
             
             <div class="post-info">
-                <a href="https://github.com/petkaantonov/bluebird/edit/master/docs/docs/api/catch.md">
+                <a href="https://github.com/tuzhu008/bluebird_cn/edit/master/docs/docs/api/catch.md">
                     <i class="fa fa-edit"></i>
-                    Edit on Github</a>
+                    编辑此页</a>
                 <br>
-                <i>Updated 02 Jan 2018</i>
+                <i>更新于 02 Jan 2018</i>
             </div>
             <div class="clearfix"></div>
             
             <div class="post">
   <article class="post-content">
-    <p><a href='/docs/api-reference.html' title=''>← Back To API Reference</a>
+    <p><a href='/bluebird_cn/docs/api-reference.html' title=''>← Back To API Reference</a>
 <div class="api-code-section"><markdown></p>
             <h2>
                 <a class="header-anchor"
@@ -131,38 +131,40 @@
                 .catch
             </h2>
 
-<p><code>.catch</code> is a convenience method for handling errors in promise chains. 
-It comes in two variants 
- - A catch-all variant similar to the synchronous <code>catch(e) {</code> block. This variant is compatible with native promises. 
- - A filtered variant (like other non-JS languages typically have) that lets you only handle specific errors. <strong>This variant is usually preferable and is significantly safer</strong>. </p>
+<p><code>.catch</code> 是处理 promise 链中错误的一个方便的方法。它有两个变种：</p>
+
+<ul>
+<li>catch-all 变种，类似于同步的 <code>catch(e) {</code> 块。 这个变中与原生 promise 兼容。</li>
+<li>filtered 变种 (像其他非JS语言一样) ，这让你只能处理特定的错误。 <strong>这种变种通常更可取，而且更安全</strong>.</li>
+</ul>
             <h3>
                 <a class="header-anchor"
-                    name="a-note-on-promise-exception-handling"
+                    name="promise"
                     aria-hidden="true"
-                    href="#a-note-on-promise-exception-handling"><i class="fa fa-link"></i></a>
-                A note on promise exception handling.
+                    href="#promise"><i class="fa fa-link"></i></a>
+                关于 promise 异常处理
             </h3>
 
-<p>Promise exception handling mirrors native exception handling in JavaScript. A synchronous function <code>throw</code>ing is similar to a promise rejecting. Here is an example to illustrate it:</p>
+<p>Promise 异常处理在 JavaScript 中反映了原生的异常处理。同步函数的 <code>throw</code> 类似于 promise 的拒绝。这里有一个例子来说明它:</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="kd">function</span> <span class="nx">getItems</span><span class="p">(</span><span class="nx">param</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span> 
+    <span class="k">try</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="nx">getItemsSync</span><span class="p">();</span>
-        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">items</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nx">InvalidItemsError</span><span class="p">();</span>  
-    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span> 
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">items</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nx">InvalidItemsError</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// can address the error here, either from getItemsSync returning a falsey value or throwing itself</span>
-        <span class="k">throw</span> <span class="nx">e</span><span class="p">;</span> <span class="c1">// need to re-throw the error unless I want it to be considered handled. </span>
+        <span class="k">throw</span> <span class="nx">e</span><span class="p">;</span> <span class="c1">// need to re-throw the error unless I want it to be considered handled.</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nx">process</span><span class="p">(</span><span class="nx">items</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Similarly, with promises:</p>
+<p>类似的，使用 promises:</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="kd">function</span> <span class="nx">getItems</span><span class="p">(</span><span class="nx">param</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">getItemsAsync</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">items</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">items</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nx">InvalidItemsError</span><span class="p">();</span> 
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">items</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nx">InvalidItemsError</span><span class="p">();</span>
         <span class="k">return</span> <span class="nx">items</span><span class="p">;</span>
     <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="c1">// can address the error here and recover from it, from getItemsAsync rejects or returns a falsey value</span>
-        <span class="k">throw</span> <span class="nx">e</span><span class="p">;</span> <span class="c1">// Need to rethrow unless we actually recovered, just like in the synchronous version</span>
+        <span class="c1">// 可以在这里解决错误，并从 getItemsAsync 拒绝中恢复，或返回 falsey 值</span>
+        <span class="k">throw</span> <span class="nx">e</span><span class="p">;</span> <span class="c1">// 除非我们实际恢复，否则需要重新抛出，就像在同步版本中一样</span>
     <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">process</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>            <h3>
@@ -175,9 +177,10 @@ It comes in two variants
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">any</span> <span class="nx">error</span><span class="p">)</span> <span class="nx">handler</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">Promise</span>
 </code></pre></div><div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="p">.</span><span class="nx">caught</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">any</span> <span class="nx">error</span><span class="p">)</span> <span class="nx">handler</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">Promise</span>
 </code></pre></div>
-<p>This is a catch-all exception handler, shortcut for calling <a href='/docs/api/then.html'><code><code>.then(null, handler)</code></code></a> on this promise. Any exception happening in a <code>.then</code>-chain will propagate to nearest <code>.catch</code> handler.</p>
+<p>这是一个 catch-all 异常处理程序， 在此 promise 上调用 <a href='/bluebird_cn/docs/api/then.html'><code><code>.then(null, handler)</code></code></a> 的快捷方式。
+任何发生在 <code>.then</code> 链中的异常都会传播到最近的 <code>.catch</code> 处理程序。</p>
 
-<p><em>For compatibility with earlier ECMAScript versions, an alias <code>.caught</code> is provided for <a href='/docs/api/catch.html'><code><code>.catch</code></code></a>.</em></p>
+<p><em>为了与以前的 ECMAScript 版本兼容，为 <a href='/bluebird_cn/docs/api/catch.html'><code><code>.catch</code></code></a> 提供了别名 <code>.caught</code>。</em></p>
             <h3>
                 <a class="header-anchor"
                     name="filtered-catch"
@@ -194,48 +197,47 @@ It comes in two variants
     <span class="kd">function</span><span class="p">(</span><span class="nx">any</span> <span class="nx">error</span><span class="p">)</span> <span class="nx">handler</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">Promise</span>
 </code></pre></div>
-<p>This is an extension to <a href='/docs/api/catch.html'><code><code>.catch</code></code></a> to work more like catch-clauses in languages like Java or C#. Instead of manually checking <code>instanceof</code> or <code>.name === &quot;SomeError&quot;</code>, you may specify a number of error constructors which are eligible for this catch handler. The catch handler that is first met that has eligible constructors specified, is the one that will be called.</p>
+<p>这是 <a href='/bluebird_cn/docs/api/catch.html'><code><code>.catch</code></code></a> 的扩展，使其更像在 Java 或 C＃ 等语言中的 catch-clause。 你可以指定一个符合这个 catch 处理程序的错误构造函数的数字，而不是手动检查 <code>instanceof</code> 或 <code>.name === &quot;SomeError&quot;</code>。 第一个遇到的符合指定构造函数的 catch 处理程序将被调用。</p>
 
-<p>Example:</p>
+<p>示例:</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">somePromise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span><span class="p">.</span><span class="nx">d</span><span class="p">();</span>
 <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">TypeError</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//If it is a TypeError, will end up here because</span>
-    <span class="c1">//it is a type error to reference property of undefined</span>
+    <span class="c1">// 如果是一个 TypeError，将在出现在这里</span>
+    <span class="c1">// 因为引用未定义属性是一个类型错误</span>
 <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">ReferenceError</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//Will end up here if a was never declared at all</span>
+    <span class="c1">// 如果从未在任何提防声明，将在出现在这里</span>
 <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//Generic catch-the rest, error wasn&#39;t TypeError nor</span>
-    <span class="c1">//ReferenceError</span>
+    <span class="c1">//通用的 catch, 错误既不是 TypeError 也不是 ReferenceError</span>
 <span class="p">});</span>
 </code></pre></div>
-<p>You may also add multiple filters for a catch handler:</p>
+<p>您还可以为一个 catch 处理程序添加多个过滤器:</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">somePromise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span><span class="p">.</span><span class="nx">d</span><span class="p">();</span>
 <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">TypeError</span><span class="p">,</span> <span class="nx">ReferenceError</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//Will end up here on programmer error</span>
+    <span class="c1">// 程序错误时将出现在这里</span>
 <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">NetworkError</span><span class="p">,</span> <span class="nx">TimeoutError</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//Will end up here on expected everyday network errors</span>
+      <span class="c1">// 预期的日常网络错误会出现在这里</span>
 <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//Catch any unexpected errors</span>
+    <span class="c1">// Catch 任何意想不到的错误</span>
 <span class="p">});</span>
 </code></pre></div>
-<p>For a parameter to be considered a type of error that you want to filter, you need the constructor to have its <code>.prototype</code> property be <code>instanceof Error</code>.</p>
+<p>对于一个参数被认为是你想要过滤的错误类型，你需要构造函数的 <code>.prototype</code> 属性是 <code>instanceof Error</code>。</p>
 
-<p>Such a constructor can be minimally created like so:</p>
+<p>这样的构造函数可以这样创建：</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="kd">function</span> <span class="nx">MyCustomError</span><span class="p">()</span> <span class="p">{}</span>
 <span class="nx">MyCustomError</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nb">Error</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span>
 </code></pre></div>
-<p>Using it:</p>
+<p>使用它:</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">throw</span> <span class="k">new</span> <span class="nx">MyCustomError</span><span class="p">();</span>
 <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">MyCustomError</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">//will end up here now</span>
 <span class="p">});</span>
 </code></pre></div>
-<p>However if you  want stack traces and cleaner string output, then you should do:</p>
+<p>但是，如果您想要堆栈跟踪和更干净的字符串输出，那么您应该这样做:</p>
 
-<p><em>in Node.js and other V8 environments, with support for <code>Error.captureStackTrace</code></em></p>
+<p><em>在 Node.js 和其他 V8 环境中， 支持 <code>Error.captureStackTrace</code></em></p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="kd">function</span> <span class="nx">MyCustomError</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="nx">message</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;MyCustomError&quot;</span><span class="p">;</span>
@@ -244,22 +246,17 @@ It comes in two variants
 <span class="nx">MyCustomError</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nb">Error</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span>
 <span class="nx">MyCustomError</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">=</span> <span class="nx">MyCustomError</span><span class="p">;</span>
 </code></pre></div>
-<p>Using CoffeeScript&#39;s <code>class</code> for the same:</p>
+<p>使用 CoffeeScript 的 <code>class</code> ：</p>
 <div class="highlight"><pre><code class="language-coffee" data-lang="coffee"><span></span><span class="k">class</span> <span class="nx">MyCustomError</span> <span class="k">extends</span> <span class="nb">Error</span>
   <span class="nv">constructor: </span><span class="nf">(@message) -&gt;</span>
     <span class="vi">@name = </span><span class="s">&quot;MyCustomError&quot;</span>
     <span class="nb">Error</span><span class="p">.</span><span class="nx">captureStackTrace</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">MyCustomError</span><span class="p">)</span>
 </code></pre></div>
-<p>This method also supports predicate-based filters. If you pass a
-predicate function instead of an error constructor, the predicate will receive
-the error as an argument. The return result of the predicate will be used
-determine whether the error handler should be called.</p>
+<p>该方法还支持基于谓词（predicate-based）的过滤器。 如果传递一个谓词函数而不是一个错误构造函数，则谓词将接收到该错误作为参数。谓词的返回结果将用于确定是否应该调用错误处理程序。</p>
 
-<p>Predicates should allow for very fine grained control over caught errors:
-pattern matching, error-type sets with set operations and many other techniques
-can be implemented on top of them.</p>
+<p>谓词应该允许对捕获到的错误进行非常细致的控制：模式匹配，带有集合操作的错误类型集合以及许多其他可以在它们之上实现的技术。</p>
 
-<p>Example of using a predicate-based filter:</p>
+<p>使用基于谓词的过滤器的示例：</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="kd">var</span> <span class="nb">Promise</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;bluebird&quot;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">promisify</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;request&quot;</span><span class="p">));</span>
 
@@ -273,19 +270,19 @@ can be implemented on top of them.</p>
    <span class="c1">//A client error like 400 Bad Request happened</span>
 <span class="p">});</span>
 </code></pre></div>
-<p>Predicate functions that only check properties have a handy shorthand. In place of a predicate function, you can pass an object, and its properties will be checked against the error object for a match:</p>
+<p>只有检查属性的谓词函数有一个方便的速记。代替一个谓词函数，你可以传递一个对象，并且它的属性将检查错误对象对应的属性，以进行匹配：</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileAsync</span><span class="p">(...)</span>
     <span class="p">.</span><span class="nx">then</span><span class="p">(...)</span>
     <span class="p">.</span><span class="k">catch</span><span class="p">({</span><span class="nx">code</span><span class="o">:</span> <span class="s1">&#39;ENOENT&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;file not found: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">path</span><span class="p">);</span>
     <span class="p">});</span>
 </code></pre></div>
-<p>The object predicate passed to <code>.catch</code> in the above code (<code>{code: &#39;ENOENT&#39;}</code>) is shorthand for a predicate function <code>function predicate(e) { return isObject(e) &amp;&amp; e.code == &#39;ENOENT&#39; }</code>, I.E. loose equality is used.</p>
+<p>在上面的代码中，这个对象谓词(<code>{code: &#39;ENOENT&#39;}</code>)被传递给 <code>.catch</code>，这是谓词函数 <code>function predicate(e) { return isObject(e) &amp;&amp; e.code == &#39;ENOENT&#39; }</code> 的速记。也就是说，它们是等价的。</p>
 
-<p><em>For compatibility with earlier ECMAScript version, an alias <code>.caught</code> is provided for <a href='/docs/api/catch.html'><code><code>.catch</code></code></a>.</em>
+<p><em>为了与早期的 ECMAScript 版本兼容，为 <a href='/bluebird_cn/docs/api/catch.html'><code><code>.catch</code></code></a> 提供了一个别名 <code>.caught</code>。</em>
 </markdown></div></p>
 
-<p>By not returning a rejected value or <code>throw</code>ing from a catch, you &quot;recover from failure&quot; and continue the chain:</p>
+<p>通过不返回一个被拒绝的值或来自 catch <code>throw</code>，你“从失败中恢复”并继续链：</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;fail!&#39;</span><span class="p">))</span>
   <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// fallback with &quot;recover from failure&quot;</span>
@@ -295,7 +292,7 @@ can be implemented on top of them.</p>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span> <span class="c1">// will print &quot;success!&quot;</span>
   <span class="p">});</span>
 </code></pre></div>
-<p>This is exactly like the synchronous code:</p>
+<p>这完全像同步代码：</p>
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span></span><span class="kd">var</span> <span class="nx">result</span><span class="p">;</span>
 <span class="k">try</span> <span class="p">{</span>
   <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;fail&#39;</span><span class="p">);</span>
@@ -308,7 +305,7 @@ can be implemented on top of them.</p>
     var disqus_title = ".catch";
     var disqus_shortname = "bluebirdjs";
     var disqus_identifier = "disqus-id-catch";
-    
+
     (function() {
         var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
         dsq.src = "//" + disqus_shortname + ".disqus.com/embed.js";
@@ -322,8 +319,12 @@ can be implemented on top of them.</p>
 
         </div>
       </div>
-    </div>
-    <footer></footer>
+  </div>
+    <footer>
+      <div class="container">
+        <p style="text-align:center">本站翻译自 <a href='https://github.com/petkaantonov/bluebird/'>bluebird</a></p>
+      </div>
+    </footer>
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="//cdn.jsdelivr.net/bluebird/3.5.1/bluebird.js"></script>
