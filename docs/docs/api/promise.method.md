@@ -5,20 +5,20 @@ title: Promise.method
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.method
+
+## Promise.method
 
 ```js
 Promise.method(function(...arguments) fn) -> function
 ```
 
+返回包装了给定函数 `fn` 的新函数。新函数将始终返回一个 promise，这个 promise 使用原始函数返回值履行，或者使用来自原始函数抛出的异常进行拒绝。
 
-Returns a new function that wraps the given function `fn`. The new function will always return a promise that is fulfilled with the original functions return values or rejected with thrown exceptions from the original function.
+当一个函数有时可以同步返回或者同步抛出时，这个方法很方便。
 
-This method is convenient when a function can sometimes return synchronously or throw synchronously.
-
-Example without using `Promise.method`:
+不使用 `Promise.method` 的例子:
 
 ```js
 MyClass.prototype.method = function(input) {
@@ -37,7 +37,7 @@ MyClass.prototype.method = function(input) {
 };
 ```
 
-Using the same function `Promise.method`, there is no need to manually wrap direct return or throw values into a promise:
+使用 `Promise.method`，不需要在 promise 中手动包装直接返回值或抛出值：
 
 ```js
 MyClass.prototype.method = Promise.method(function(input) {

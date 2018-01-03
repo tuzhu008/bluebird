@@ -5,20 +5,20 @@ title: new Promise
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##new Promise
 
-```js
-new Promise(function(function resolve, function reject) resolver) -> Promise
-```
+## new Promise
 
+  ```js
+  new Promise(function(function resolve, function reject) resolver) //-> Promise
+  ```
 
-Create a new promise. The passed in function will receive functions `resolve` and `reject` as its arguments which can be called to seal the fate of the created promise.
+创建一个新的 promise。传入的函数将接收函数 `resolve` 和 `reject` 作为它的参数，它可以被调用来封装所创建的 promise 的命运（fate，完成还是拒绝）。
 
-*Note: See [explicit construction anti-pattern]({{ "/docs/anti-patterns.html#the-explicit-construction-anti-pattern" | prepend: site.baseurl }}) before creating promises yourself*
+*注意: 在创建你自己的 promise 之前，请参见 [显示的构造 anti-pattern]({{ "/docs/anti-patterns.html#the-explicit-construction-anti-pattern" | prepend: site.baseurl }})*
 
-Example:
+示例:
 
 ```js
 function ajaxGetAsync(url) {
@@ -32,25 +32,25 @@ function ajaxGetAsync(url) {
 }
 ```
 
-If you pass a promise object to the `resolve` function, the created promise will follow the state of that promise.
+如果将一个 promise 对象传递到 `resolve` 函数，创建出来的 promise 将遵循这个 promise 的状态。
 
 <hr>
 
-To make sure a function that returns a promise is following the implicit but critically important contract of promises, you can start a function with `new Promise` if you cannot start a chain immediately:
+为了确保一个返回 promise 的函数遵循了隐含但非常重要的 promise 契约，如果你不能立即启动一个链，你就可以使用 `new Promise` 启动一个函数:
 
 ```js
 function getConnection(urlString) {
     return new Promise(function(resolve) {
-        //Without new Promise, this throwing will throw an actual exception
+        // 没有 new Promise，这里抛出将抛出一个实际的异常
         var params = parse(urlString);
         resolve(getAdapter(params).getConnection());
     });
 }
 ```
 
-The above ensures `getConnection` fulfills the contract of a promise-returning function of never throwing a synchronous exception. Also see [`Promise.try`](.) and [`Promise.method`](.)
+上面确保 `getConnection` 满足一个 promise 返回函数的契约，该函数从不抛出同步异常。也请查看 [`Promise.try`](.) 和 [`Promise.method`](.)
 
-The resolver is called synchronously (the following is for documentation purposes and not idiomatic code):
+resolver 是同步调用的(以下是用于文档化的目的，而不是惯用代码):
 
 ```js
 function getPromiseResolveFn() {
@@ -69,7 +69,7 @@ function getPromiseResolveFn() {
     var disqus_title = "new Promise";
     var disqus_shortname = "bluebirdjs";
     var disqus_identifier = "disqus-id-new-promise";
-    
+
     (function() {
         var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
         dsq.src = "//" + disqus_shortname + ".disqus.com/embed.js";

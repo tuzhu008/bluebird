@@ -5,7 +5,7 @@ title: Promise.race
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
 ##Promise.race
 
@@ -13,9 +13,14 @@ title: Promise.race
 Promise.race(Iterable<any>|Promise<Iterable<any>> input) -> Promise
 ```
 
-Given an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(arrays are `Iterable`\), or a promise of an `Iterable`, which produces promises (or a mix of promises and values), iterate over all the values in the `Iterable` into an array and return a promise that is fulfilled or rejected as soon as a promise in the array is fulfilled or rejected with the respective rejection reason or fulfillment value.
+给定一个[`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(数组是`Iterable`\)，或者一个可迭代的 promise，它产生 promise(或 promise 和值的混合)，迭代遍历 `Iterable` 中所有的值放入一个数组中，并当一个 promise 在数组中以最快的速度被履行或拒绝时，它就会使用各自的拒绝原因或履行值返回一个被履行或拒绝的 promise。
 
-This method is only implemented because it's in the ES6 standard. If you want to race promises to fulfillment the [`.any`](.) method is more appropriate as it doesn't qualify a rejected promise as the winner. It also has less surprises: `.race` must become infinitely pending if an empty array is passed but passing an empty array to [`.any`](.) is more usefully a `RangeError`
+> 并行执行，一旦有一个 promise 被解决或拒绝就停止并返回
+
+
+这个方法只是在 ES6 标准中才实现的。如果你想使 promise 竞争履行（也就是说，看看谁先履行）的话，[`.any`](.) 方法是更合适的，因为它不限制被拒绝的承诺作为赢家。没什么意外：如果传递一个空的数组，`.race` 必须变成无限的等待，但将一个空的数组传递给 [`.any`](.) 会产生 `RangeError`。
+
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

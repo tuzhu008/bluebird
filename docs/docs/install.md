@@ -1,39 +1,40 @@
 ---
 id: install
-title: Installation
+title: 安装
 ---
 
-- [Browser installation](#browser-installation)
-- [Node installation](#node-installation)
-- [Supported platforms](#supported-platforms)
+- [浏览器安装](#浏览器安装)
+- [Node 安装](#Node-安装)
+- [平台支持](#平台支持)
 
-##Browser installation
+## 浏览器安装
 
-Download <a href="https://cdn.jsdelivr.net/bluebird/{{ site.version }}/bluebird.js">bluebird {{ site.version }} (development)</a>
+下载 <a href="https://cdn.jsdelivr.net/bluebird/{{ site.version }}/bluebird.js">bluebird {{ site.version }} (开发)</a>
 
-Unminified source file meant to be used in development. Warnings and long stack traces are enabled which are taxing on performance.
+未压缩的源文件，用于开发。警告和长堆栈跟踪被启用，这是对性能来说是繁重的。
 
 ```html
 <script src="//cdn.jsdelivr.net/bluebird/{{ site.version }}/bluebird.js"></script>
 ```
 
-Download <a href="https://cdn.jsdelivr.net/bluebird/{{ site.version }}/bluebird.min.js">bluebird {{ site.version }} (production)</a>
+下载 <a href="https://cdn.jsdelivr.net/bluebird/{{ site.version }}/bluebird.min.js">bluebird {{ site.version }} (生产)</a>
 
-Minified source file meant to be used in production. Warnings and long straces are disabled. The gzipped size is 17.76KB.
+意在生产中使用的压缩过的源文件。警告和长堆栈跟踪被禁用。 gzip 后的大小是 17.76KB。
 
 ```html
 <script src="//cdn.jsdelivr.net/bluebird/{{ site.version }}/bluebird.min.js"></script>
 ```
 
-Unless an AMD loader is installed, the script tag installation exposes the library in the `Promise` and `P` namespaces. If you want to restore the `Promise` namespace, use `var Bluebird = Promise.noConflict()`.
+除非安装了 AMD 加载器，否则 `<script>` 标记安装将在 `Promise` 和 `P` 命名空间中暴露该库。 如果你想恢复 `Promise` 命名空间，使用 `var Bluebird = Promise.noConflict()`。
 
-###Bower
+
+### Bower
 
 ```
 $ bower install --save bluebird
 ```
 
-###Browserify and Webpack
+### Browserify 和 Webpack
 
 ```
 $ npm install --save bluebird
@@ -41,14 +42,14 @@ $ npm install --save bluebird
 
 ```js
 var Promise = require("bluebird");
-// Configure
+// 配置
 Promise.config({
     longStackTraces: true,
-    warnings: true // note, run node with --trace-warnings to see full stack traces for warnings
+    warnings: true // 注意, 使用 --trace-warnings 运行 node，以查看警告的完整堆栈跟踪
 })
 ```
 
-##Node installation
+## Node 安装
 
 ```
 $ npm install --save bluebird
@@ -58,25 +59,25 @@ $ npm install --save bluebird
 var Promise = require("bluebird");
 ```
 
-To enable long stack traces and warnings in node development:
+要在 node 开发环境中启用长堆栈跟踪和警告：
 
 ```
 $ NODE_ENV=development node server.js
 ```
 
-To enable long stack traces and warnings in node production:
+要在 node 生产环境中启用长堆栈跟踪和警告：
 
 ```
 $ BLUEBIRD_DEBUG=1 node server.js
 ```
 
-See [Environment Variables](.).
+参见 [环境变量](.)。
 
-##Supported platforms
+## 平台支持
 
-Bluebird officially supports and is tested on node.js, iojs and browsers starting from IE7. Unofficial platforms are supported with best effort only.
+蓝鸟官方支持并在 node.js、iojs 和从 IE7 开始的浏览器进行测试。非官方支持的平台只能尽力而为。
 
-IE7 and IE8 do not support using keywords as property names, so if supporting these browsers is required you need to use the compatibility aliases:
+IE7 和 IE8 不支持使用关键字作为属性名，所以如果需要支持这些浏览器，你需要使用兼容性别名:
 
 
 - [`Promise.try()`](.) -> `Promise.attempt()`
@@ -85,6 +86,6 @@ IE7 and IE8 do not support using keywords as property names, so if supporting th
 - [`.return()`](.) -> `.thenReturn()`
 - [`.throw()`](.) -> `.thenThrow()`
 
-Long stack traces are only supported in Chrome, recent Firefoxes and Internet Explorer 10+
+常堆栈跟踪只被 Chrome、最近的 Firefoxes 和 Internet Explorer 10+ 支持。
 
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/petka_antonov.svg)](https://saucelabs.com/u/petka_antonov)

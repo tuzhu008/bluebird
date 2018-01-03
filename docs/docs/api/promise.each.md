@@ -6,7 +6,7 @@ title: Promise.each
 
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
 ##Promise.each
 
@@ -19,11 +19,11 @@ Promise.each(
 
 [api/promise.each](unfinished-article)
 
-Iterate over an array, or a promise of an array, which contains promises (or a mix of promises and values) with the given `iterator` function with the signature `(value, index, length)` where `value` is the resolved value of a respective promise in the input array. **Iteration happens serially**. If the iterator function returns a promise or a thenable, then the result of the promise is awaited before continuing with next iteration. If any promise in the input array is rejected, then the returned promise is rejected as well.
+使用给定的 `iterator` 函数迭代一个数组，或一个数组（它包含 promises(或 promsies 与值的混合)）的 promise。该函数签名为 `(value, index, length)` ，其中 `value` 是输入数组种的各个 promise 的解决值。**迭代串行地发生**。如果迭代器返回一个 promise 或 thenable，然后下一个迭代将等待该 promise 的结果。如果输入数组中的任何 promise 被拒绝，返回的 promise 都将是拒绝的。
 
-If all of the iterations resolve successfully, Promise.each resolves to the original array unmodified.  However, if one iteration rejects or errors, Promise.each ceases execution immediately and does not process any further iterations.  The error or rejected value is returned in this case instead of the original array.
+如果所有的迭代都成功解决，Promise.each 解决为未修改的原始数组。但是，如果有一个迭代拒绝或错误，Promise.each 立即停止执行，并且不处理任何进一步的迭代。在这种情况下返回错误或被拒绝的值而不是原始数组。
 
-This method is meant to be used for side effects. 
+这个方法是用来做副作用的。
 
 <hr>
 </markdown></div>

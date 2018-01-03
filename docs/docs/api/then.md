@@ -5,19 +5,21 @@ title: .then
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.then
+
+
+## .then
 
 ```js
 .then(
-    [function(any value) fulfilledHandler],
-    [function(any error) rejectedHandler]
+    [function(any value) fulfilledHandler], // promise 被 resolve 后调用
+    [function(any error) rejectedHandler] // promise 被 reject 后调用
 ) -> Promise
 ```
 
 
-[Promises/A+ `.then`](http://promises-aplus.github.io/promises-spec/). If you are new to promises, see the [Beginner's Guide]({{ "/docs/beginners-guide.html" | prepend: site.baseurl }}).
+[Promises/A+ `.then`](http://promises-aplus.github.io/promises-spec/). 如果你才开始学习 promises，请参见[初学者指南]({{ "/docs/beginners-guide.html" | prepend: site.baseurl }}).
 </markdown></div>
 
 <div id="disqus_thread"></div>
@@ -25,7 +27,7 @@ title: .then
     var disqus_title = ".then";
     var disqus_shortname = "bluebirdjs";
     var disqus_identifier = "disqus-id-then";
-    
+
     (function() {
         var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
         dsq.src = "//" + disqus_shortname + ".disqus.com/embed.js";

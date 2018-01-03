@@ -1,38 +1,42 @@
 ---
 id: getting-started
-title: Getting Started
+title: 开始
 redirect_from: "/index.html"
 redirect_from: "/docs/index.html"
 ---
 
 [getting-started](unfinished-article)
 
-## Node.js
+## NPM 安装
 
-    npm install bluebird
+```
+npm install bluebird
+```
 
-Then:
+然后:
 
 ```js
 var Promise = require("bluebird");
 ```
-Alternatively in ES6 
+
+另外，在 ES6 中
+
 ```js
 import * as Promise from 'bluebird';
 ```
 
-## Browsers
+## 浏览器
 
-(See also [Installation](install.html).)
+(参见 [安装章节](install.html).)
 
-There are many ways to use bluebird in browsers:
+这里有很多使用在浏览器中 bluebird 的方法：
 
-- Direct downloads
-    - Full build [bluebird.js](https://cdn.jsdelivr.net/bluebird/latest/bluebird.js)
-    - Full build minified [bluebird.min.js](https://cdn.jsdelivr.net/bluebird/latest/bluebird.min.js)
-    - Core build [bluebird.core.js](https://cdn.jsdelivr.net/bluebird/latest/bluebird.core.js)
-    - Core build minified [bluebird.core.min.js](https://cdn.jsdelivr.net/bluebird/latest/bluebird.core.min.js)
-- You may use browserify on the main export
-- You may use the [bower](http://bower.io) package.
+- 直接下载
+    - 完整构建 [bluebird.js](https://cdn.jsdelivr.net/bluebird/latest/bluebird.js)
+    - 压缩的完整构建 [bluebird.min.js](https://cdn.jsdelivr.net/bluebird/latest/bluebird.min.js)
+    - 核心构建 [bluebird.core.js](https://cdn.jsdelivr.net/bluebird/latest/bluebird.core.js)
+    - 压缩的核心构建 [bluebird.core.min.js](https://cdn.jsdelivr.net/bluebird/latest/bluebird.core.min.js)
+- 可以在主导出上使用 browserify
+- 可以使用 [bower](http://bower.io) 包
 
-When using script tags the global variables `Promise` and `P` (alias for `Promise`) become available. Bluebird runs on a wide variety of browsers including older versions. We'd like to thank BrowserStack for giving us a free account which helps us test that. 
+当使用 `<script>` 标记时，全局变量 `Promise` 和 `P` (`Promise` 的别名)是可用。Bluebird 在各种各样的浏览器上运行，包括旧版本。我们要感谢 BrowserStack 为我们提供了一个免费的帐户，帮助我们进行测试。

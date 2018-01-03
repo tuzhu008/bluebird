@@ -1,6 +1,6 @@
 ---
 id: deprecated-apis
-title: Deprecated APIs
+title: 弃用的 API
 ---
 
 [deprecated-apis](unfinished-article)
@@ -22,7 +22,7 @@ For every use case that the methods below solve there exists a better alternativ
     - [`.callback`](#callback---function)
 
  - [Old Promise Cancellation](#old-promise-cancellation)
-  
+
 
 ##Progression
 
@@ -100,4 +100,3 @@ delay(500).then(function(ms){
 ##Old Promise Cancellation
 
 In 2.x, promise cancellation looked very differently. Promise cancellation received a major overhaul for version 3 in order to create a sound variant of cancellable promises. You can still use 2.x cancellation with bluebird 2.x (which is still supported - but not recommended). See [Cancellation](/cancellation.html) for more details. The 2.x docs are [still accessible under the 2.x branch](https://github.com/petkaantonov/bluebird/blob/2.x/API.md).
-

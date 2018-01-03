@@ -5,9 +5,10 @@ title: Promise.try
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.try
+
+## Promise.try
 
 ```js
 Promise.try(function() fn) -> Promise
@@ -16,8 +17,7 @@ Promise.try(function() fn) -> Promise
 Promise.attempt(function() fn) -> Promise
 ```
 
-
-Start the chain of promises with `Promise.try`. Any synchronous exceptions will be turned into rejections on the returned promise.
+使用 `Promise.try` 启动 promises 链。任何同步异常都将在返回的 promise 中被拒绝。
 
 ```js
 function getUserById(id) {
@@ -30,9 +30,10 @@ function getUserById(id) {
 }
 ```
 
-Now if someone uses this function, they will catch all errors in their Promise `.catch` handlers instead of having to handle both synchronous and asynchronous exception flows.
+现在，如果有人使用这个函数，他们将会在的 Promise `.catch` 中捕获所有的错误，而不是同时处理同步和异步异常流。
 
-*For compatibility with earlier ECMAScript version, an alias `Promise.attempt` is provided for [`Promise.try`](.).*
+*为了与早期的 ECMAScript 版本兼容，为 [`Promise.try`](.) 提供了别名 `Promise.attempt`。*
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

@@ -5,17 +5,20 @@ title: .all
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.all
+
+## .all
 
 ```js
 .all() -> Promise
 ```
 
-Consume the resolved [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols) and wait for all items to fulfill similar to [Promise.all()](.).
+使用已解决的 [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols) 并等待所有项都履行。类似于 [Promise.all()](.).
 
-[Promise.resolve(iterable).all()](.) is the same as [Promise.all(iterable)](.).
+[Promise.resolve(iterable).all()](.) 与 [Promise.all(iterable)](.) 是相同的。
+
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

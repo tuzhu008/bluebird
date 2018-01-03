@@ -5,16 +5,17 @@ title: Promise.reject
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.reject
+
+## Promise.reject
 
 ```js
 Promise.reject(any error) -> Promise
 ```
 
+ 使用给定的 `error` 创建一个被拒绝的 promise。
 
-Create a promise that is rejected with the given `error`.
 </markdown></div>
 
 <div id="disqus_thread"></div>

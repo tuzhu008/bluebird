@@ -5,7 +5,7 @@ title: Promise.map
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
 ##Promise.map
 
@@ -17,13 +17,13 @@ Promise.map(
 ) -> Promise
 ```
 
-Given an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(arrays are `Iterable`\), or a promise of an `Iterable`, which produces promises (or a mix of promises and values), iterate over all the values in the `Iterable` into an array and [map the array to another](http://en.wikipedia.org/wiki/Map_\(higher-order_function\)) using the given `mapper` function.
+给定一个[`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(数组是`Iterable`\)，或者一个可迭代的 promise，它产生 promise(或 promise 和值的混合)，迭代遍历 `Iterable` 中所有的值放入一个数组中，并使用给定的 `mapper` 函数[将数组映射到另一个数组](http://en.wikipedia.org/wiki/Map_\(higher-order_function\)) 。
 
-Promises returned by the `mapper` function are awaited for and the returned promise doesn't fulfill until all mapped promises have fulfilled as well. If any promise in the array is rejected, or any promise returned by the `mapper` function is rejected, the returned promise is rejected as well.
+`mapper` 函数返回的 promise 被等待，并且返回的 promise 不会履行，直到所有映射的 promise 都履行。如果数组中的任何 promise 被拒绝，或者 `mapper` 函数返回的任何 promise 被拒绝，返回的 promise 也会被拒绝。
 
-The mapper function for a given item is called as soon as possible, that is, when the promise for that item's index in the input array is fulfilled. This doesn't mean that the result array has items in random order, it means that `.map` can be used for concurrency coordination unlike `.all`.
+尽可能快地为给定项目的调用 `mapper` 函数，也就是说，当输入数组中的项目索引的 promise 得到履行时，它就会被调用。这并不意味着结果数组的顺序是随机的，这意味着 `.map` 可以用于并发整合，不像`.all`。
 
-A common use of `Promise.map` is to replace the `.push`+`Promise.all` boilerplate:
+`Promise.map` 的一个常见用法是替换 `.push`+`Promise.all` 样板：
 
 ```js
 var promises = [];
@@ -34,9 +34,9 @@ Promise.all(promises).then(function() {
     console.log("done");
 });
 
-// Using Promise.map:
+// 使用 Promise.map:
 Promise.map(fileNames, function(fileName) {
-    // Promise.map awaits for returned promises as well.
+    // Promise.map 等待返回的承诺。
     return fs.readFileAsync(fileName);
 }).then(function() {
     console.log("done");
@@ -44,7 +44,7 @@ Promise.map(fileNames, function(fileName) {
 
 ```
 
-A more involved example:
+一个更复杂的例子:
 
 ```js
 var Promise = require("bluebird");
@@ -60,10 +60,9 @@ fs.readdirAsync(".").map(function(fileName) {
             contents: contents
         }
     });
-// The return value of .map is a promise that is fulfilled with an array of the mapped values
-// That means we only get here after all the files have been statted and their contents read
-// into memory. If you need to do more operations per file, they should be chained in the map
-// callback for concurrency.
+// .map 的返回值是一个已履行的 promise，带有映射值的一个数组
+// 也就是说，我们只有在所有文件都被统计下来并将内容读取到内存之后才会到达这里
+// 如果您需要在每个文件中执行更多操作，那么它们应该被链接到并发的映射回调中。
 }).call("sort", function(a, b) {
     return a.fileName.localeCompare(b.fileName);
 }).each(function(file) {
@@ -71,18 +70,19 @@ fs.readdirAsync(".").map(function(fileName) {
     console.log(file.fileName + " last modified " + file.stat.mtime + " " + contentLength)
 });
 ```
+<i id='map-option-concurrency'></i>
+#### Map 选项: concurrency
 
-####Map Option: concurrency
-
-You may optionally specify a concurrency limit:
+您可以选择指定一个并发限制:
 
 ```js
 ...map(..., {concurrency: 3});
 ```
 
-The concurrency limit applies to Promises returned by the mapper function and it basically limits the number of Promises created. For example, if `concurrency` is `3` and the mapper callback has been called enough so that there are three returned Promises currently pending, no further callbacks are called until one of the pending Promises resolves. So the mapper function will be called three times and it will be called again only after at least one of the Promises resolves.
+并发性限制适用于 mapper 函数返回的承诺，它基本上限制了所创建的 promise 的数量。例如，如果 `concurrency` 是 `3`，并且 mapper 回调已经被调用了足够多，因此有三个返回的 promise 正在等待，那么在一个待完成 promise 解决之前，不会再调用任何进一步的回调。因此，mapper 函数将被调用三次，并且只有在其中一个 promise 解决之后，它才会被再次调用。
 
-Playing with the first example with and without limits, and seeing how it affects the duration when reading 20 files:
+在第一个示例中使用并发性限制，看看它如何影响读取 20 个文件的持续时间:
+
 
 ```js
 var Promise = require("bluebird");
@@ -100,10 +100,9 @@ fs.readdirAsync(".").map(function(fileName) {
             contents: contents
         }
     });
-// The return value of .map is a promise that is fulfilled with an array of the mapped values
-// That means we only get here after all the files have been statted and their contents read
-// into memory. If you need to do more operations per file, they should be chained in the map
-// callback for concurrency.
+// .map 的返回值是一个已履行的 promise，带有映射值的一个数组
+// 也就是说，我们只有在所有文件都被统计下来并将内容读取到内存之后才会到达这里
+// 如果您需要在每个文件中执行更多操作，那么它们应该被链接到并发的映射回调中。
 }, {concurrency: concurrency}).call("sort", function(a, b) {
     return a.fileName.localeCompare(b.fileName);
 }).then(function() {
@@ -120,7 +119,8 @@ $ node test.js Infinity
 reading files: 9ms
 ```
 
-The order `map` calls the mapper function on the array elements is not specified, there is no guarantee on the order in which it'll execute the `map`er on the elements. For order guarantee in sequential execution - see [Promise.mapSeries](.).
+命令 `map` 在数组元素上调用 mapper 函数没有被指定，它不能保证元素上执行 `map`er 的顺序。 对于保证执行顺序 - 请参见 [Promise.mapSeries](.)。
+
 </markdown></div>
 
 <div id="disqus_thread"></div>
@@ -128,8 +128,6 @@ The order `map` calls the mapper function on the array elements is not specified
     var disqus_title = "Promise.map";
     var disqus_shortname = "bluebirdjs";
     var disqus_identifier = "disqus-id-promise.map";
-
-    (function() {
         var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
         dsq.src = "//" + disqus_shortname + ".disqus.com/embed.js";
         (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(dsq);

@@ -5,15 +5,17 @@ title: Promise.any
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.any
+
+## Promise.any
 
 ```js
 Promise.any(Iterable<any>|Promise<Iterable<any>> input) -> Promise
 ```
 
-Like [Promise.some](.), with 1 as `count`. However, if the promise fulfills, the fulfillment value is not an array of 1 but the value directly.
+像 [Promise.some](.)，使用 1 作为 `count`。但是，如果 promise 履行，这个履行值不是 1 的一个数组，而就是 1。
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

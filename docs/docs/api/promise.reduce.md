@@ -5,9 +5,10 @@ title: Promise.reduce
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.reduce
+
+## Promise.reduce
 
 ```js
 Promise.reduce(
@@ -17,11 +18,12 @@ Promise.reduce(
 ) -> Promise
 ```
 
-Given an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(arrays are `Iterable`\), or a promise of an `Iterable`, which produces promises (or a mix of promises and values), iterate over all the values in the `Iterable` into an array and [reduce the array to a value](http://en.wikipedia.org/wiki/Fold_\(higher-order_function\)) using the given `reducer` function.
+给定一个[`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(数组是`Iterable`\)，或者一个可迭代的 promise，它产生 promise(或 promise 和值的混合)，迭代遍历 `Iterable` 中所有的值放入一个数组中，并使用给定的 `reducer` 函数[将数组减少为一个值](http://en.wikipedia.org/wiki/Fold_\(higher-order_function\))  。
 
-If the reducer function returns a promise, then the result of the promise is awaited, before continuing with next iteration. If any promise in the array is rejected or a promise returned by the reducer function is rejected, the result is rejected as well.
 
-Read given files sequentially while summing their contents as an integer. Each file contains just the text `10`.
+如果 `reducer` 函数返回一个 promise ，那么就会等待 promise 的结果，然后再继续下一个迭代。如果数组中的任何承诺都被拒绝，或者由 `reducer` 函数返回的 promise 被拒绝，那么结果也是拒绝的。
+
+按顺序读取给定的文件，并将其内容作为整数进行汇总。每个文件只包含文本 `10`。
 
 ```js
 Promise.reduce(["file1.txt", "file2.txt", "file3.txt"], function(total, fileName) {
@@ -33,9 +35,10 @@ Promise.reduce(["file1.txt", "file2.txt", "file3.txt"], function(total, fileName
 });
 ```
 
-*If `initialValue` is `undefined` (or a promise that resolves to `undefined`) and the iterable contains only 1 item, the callback will not be called and the iterable's single item is returned. If the iterable is empty, the callback will not be called and `initialValue` is returned (which may be `undefined`).*
+*如果 `initialValue` 是 `undefined` (或一个解决为 `undefined` 的 promise)，并且 `iterable` 只包含一个条目，那么回调将不会被调用，并且会返回 `iterable` 的单个条目。如果 `iterable` 是空的，则不会调用回调，并返回 `initialValue` (这可能是 `undefined`)。*
 
-`Promise.reduce` will start calling the reducer as soon as possible, this is why you might want to use it over `Promise.all` (which awaits for the entire array before you can call [`Array#reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) on it).
+`Promise.reduce` 会尽快地开始调用 `reducer`，这就是为什么你可能想要用它而不是 `Promise.all`(在您调用 [`Array#reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) 之前等待整个数组，也就是说需要等待 `Promise.all` 全部完成)。
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

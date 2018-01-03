@@ -1,12 +1,12 @@
 ---
 id: download-api-reference
-title: Download API Reference
+title: 下载 API 参考
 ---
 
-In order to use the documentation offline (without a stable internet connection).
+为了使用离线文档 (没有稳定的互联网连接)。
 
- - Go to [the GitHub Pages Branch `gh-pages`](https://github.com/petkaantonov/bluebird/tree/gh-pages).
- - Click "Clone Or Download".
- - Click "Download Zip".
- - Extract the contents of the zip and open the "docs" folder.
- - Open `api-reference.html` which is the documentation root.
+ - 移步 [the GitHub Pages Branch `gh-pages`](https://github.com/petkaantonov/bluebird/tree/gh-pages)。
+ - 点击 "Clone Or Download"。
+ - 点击 "Download Zip"。
+ - 提取 zip 的内容并打开 "docs" 文件夹。
+ - 打开 `api-reference.html`，它是文档的根目录。

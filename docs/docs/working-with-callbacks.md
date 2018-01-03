@@ -1,41 +1,44 @@
 ---
 id: working-with-callbacks
-title: Working with Callbacks
+title: 使用回调
 ---
 
-This page explains how to interface your code with existing callback APIs and libraries you're using. We'll see that making bluebird work with callback APIs is not only easy - it's also fast.
+这个页面解释了如何与现有的回调 api 和正在使用的库进行连接。我们将会看到，bluebird 使用回调 API 不仅很简单，而且还非常快。
 
-We'll cover several subjects. If you want to get the tl;dr what you need is likely the [Working with callback APIs using the Node convention](#working-with-callback-apis-using-the-node-convention) section.
+我们将讨论一些主题。If you want to get the tl;dr what you need is likely the [使用 Node 约定与回调 API 一起工作](#working-with-callback-apis-using-the-node-convention) 部分。
 
-First to make sure we're on the same page:
+首先要确保我们在同一个页面上:
 
-Promises have state, they start as pending and can settle to:
+Promises 是有状态的，它们以等待的状态开始，并可以解决:
 
- - __fulfilled__ meaning that the computation completed successfully.
- - __rejected__ meaning that the computation failed.
+ - __fulfilled__ 也就是说，计算成功地完成了。
+ - __rejected__ 这意味着计算失败了。
 
-Promise returning functions _should never throw_, they should always successfully return a promise which is rejected in the case of an error. Throwing from a promise returning function will force you to use both a `} catch { ` _and_ a `.catch`. People using promisified APIs do not expect promises to throw. If you're not sure how async APIs work in JS - please [see this answer](http://stackoverflow.com/questions/14220321/how-to-return-the-response-from-an-asynchronous-call/16825593#16825593) first.
+Promise 返回函数 _不应该抛出_，它们应该总是成功地返回一个在错误情况下被拒绝(rejected)的 promise。从 promise 返回函数抛出将迫使你使用 `} catch { ` _和_ 一个 `.catch`。 使用 promise化的 APIs 的人不期望 promises 会抛出。 如果您不确定异步 API 如何在 JS 中工作 - 请首先[查看这个答案](http://stackoverflow.com/questions/14220321/how-to-return-the-response-from-an-asynchronous-call/16825593#16825593)。
 
- * [Automatic vs. Manual conversion](#automatic-vs.-manual-conversion)
- * [Working with callback APIs using the Node convention](#working-with-callback-apis-using-the-node-convention)
- * [Working with one time events.](#working-with-one-time-events)
- * [Working with delays](#working-with-delays/setTimeout)
- * [Working with browser APIs](#working-with-browser-apis)
- * [Working with databases](#working-with-databases)
- * [More Common Examples](#more-common-examples)
- * [Working with any other APIs](#working-with-any-other-apis)
 
-There is also [this more general StackOverflow question](http://stackoverflow.com/questions/22519784/how-do-i-convert-an-existing-callback-api-to-promises) about conversion of callback APIs to promises. If you find anything missing in this guide however, please do open an issue or pull request.
+ * [自动 vs. 手动转换](#automatic-vs.-manual-conversion)
+ * [使用 Node 约定与回调 API 合作](#working-with-callback-apis-using-the-node-convention)
+ * [使用一次性事件](#working-with-one-time-events)
+ * [使用延迟](#working-with-delays/setTimeout)
+ * [使用浏览器 API](#working-with-browser-apis)
+ * [使用 databases](#working-with-databases)
+ * [更常见的例子](#more-common-examples)
+ * [使用任何其他 API](#working-with-any-other-apis)
 
-###Automatic vs. Manual conversion
+还有一个[更常见的 StackOverflow 问题](http://stackoverflow.com/questions/22519784/how-do-i-convert-an-existing-callback-api-to-promises)，关于如何将回调 API 转换成 promise。如果您在本指南中发现任何遗漏，请打开一个问题或拉请求。
 
-There are two primary methods of converting callback based APIs into promise based ones. You can either manually map the API calls to promise returning functions or you can let the bluebird do it for you. We **strongly** recommend the latter.
+<a href='#automatic-vs.-manual-conversion'></a>
+### 自动 vs. 手动转换
 
-Promises provide a lot of really cool and powerful guarantees like throw safety which are hard to provide when manually converting APIs to use promises. Thus, whenever it is possible to use the `Promise.promisify` and `Promise.promisifyAll` methods - we recommend you use them. Not only are they the safest form of conversion - they also use techniques of dynamic recompilation to introduce very little overhead.
+有两种主要的方法可以将基于回调的 API 转换为基于 promise 的 API。您可以手动映射 API 调用到 promise 返回函数，或者您可以让 bluebird 为您做这件事。我们**强烈**推荐后者。
 
-###Working with callback APIs using the Node convention
+Promises 提供了很多非常酷和强大的保证，比如在手动转换 API 时很难提供安全保障。因此，只要有可能使用 `Promise.promisify` 和 `Promise.promisifyAll` 方法，我们推荐你使用它们。它们不仅是最安全的转换形式——它们还使用动态重新编译技术来引入很少的开销。
 
-In Node/io.js most APIs follow a convention of ['error-first, single-parameter'](https://gist.github.com/CrabDude/10907185) as such:
+<a href='#working-with-callback-apis-using-the-node-convention'></a>
+### 使用 Node 约定与回调 API 合作
+
+在 Node/io.js 中，大多数 API 遵循一个约定 ['error-first, single-parameter'](https://gist.github.com/CrabDude/10907185) 像这样:
 
 ```js
 function getStuff(data, callback) {
@@ -48,15 +51,17 @@ getStuff("dataParam", function(err, data) {
     }
 });
 ```
+这些 API 是 Node/io 使用的大多数核心模块，而 bluebird 采用了一种快速高效的方式将它们转换为基于 promise 的 API，通过基于承诺的api。promisify”和“的承诺。promisifyAll的函数调用。
 
-This APIs are what most core modules in Node/io use and bluebird comes with a fast and efficient way to convert them to promise based APIs through the `Promise.promisify` and `Promise.promisifyAll` function calls.
+  * [Promise.promisify](.) —— 将一个回调函数转换成一个返回函数。它不会改变原来的函数并返回修改后的版本。将一个 _单一的_ 回调函数转换为一个 promise 返回函数。它不会改变原来的函数，并返回修改后的版本。
+  * [Promise.promisifyAll](.) —— 接受一个充满函数的 _对象_，并将 _每个函数_ 转换为带有 `Async` 后缀的新函数(默认情况下)。它并没有改变原来的函数，而是添加了新的函数。
 
- - [Promise.promisify](.) - converts a _single_ callback taking function into a promise returning function. It does not alter the original function and returns the modified version.
- - [Promise.promisifyAll](.) - takes an _object_ full of functions and _converts each function_ into the new one with the `Async` suffix (by default). It does not change the original functions but instead adds new ones.
+> **注意** - 请检查链接文档以获得更多参数和使用示例.
 
-> **Note** - please check the linked docs for more parameters and usage examples.
 
-Here's an example of `fs.readFile` with or without promises:
+这是一个 `fs.readFile` 的例子:
+
+未使用 promise：
 
 ```js
 // callbacks
@@ -75,7 +80,7 @@ fs.readFileAsync("name", "utf8").then(function(data) {
 });
 ```
 
-Note the new method is suffixed with `Async`, as in `fs.readFileAsync`. It did not replace the `fs.readFile` function. Single functions can also be promisified for example:
+注意，新方法是带有 `Async` 后缀，以 `fs.readFileAsync` 存在。它不会替换 `fs.readFile` 函数。单个函数也可以被 promise化：
 
 ```js
 var request = Promise.promisify(require("request"));
@@ -84,20 +89,21 @@ request("foo.bar").then(function(result) {
 });
 ```
 
-> **Note** `Promise.promisify` and `Promise.promisifyAll` use dynamic recompilation for really fast wrappers and thus calling them should be done only once. [Promise.fromCallback](.) exists for cases where this is not possible.
+> **注意** `Promise.promisify` 和 ` Promise.promisifyAll` 使用动态重新编译来实现快速的包装，因此应该只调用它们一次。 [Promise.fromCallback](.) 存在的情况下，这是不可能的。
 
-###Working with one time events
+<a href='#working-with-one-time-events'></a>
+### 使用一次性事件
 
-Sometimes we want to find out when a single one time event has finished. For example - a stream is done. For this we can use [new Promise](.). Note that this option should be considered only if [automatic conversion](#working-with-callback-apis-using-the-node-convention) isn't possible.
 
-Note that promises model a _single value through time_, they only resolve _once_ - so while they're a good fit for a single event, they are not recommended for multiple event APIs.
+有时候我们想知道一个单一的一次性事件何时完成。 例如 —— 一个流完成。为此我们可以使用 [new Promise](.)。 请注意，只有在[自动转换](#working-with-callback-apis-using-the-node-convention)不可用时才应考虑此选项。
 
-For example, let's say you have a window `onload` event you want to bind to. We can use the promise construction and resolve when the window has loaded as such:
+请注意，promises 会*通过 time 对单个值*进行建模，它们只解决*一次*——因此，当它们适合于单个事件时，不推荐将它们用于多事件 APIs。
+
+例如，假设您有一个您想要绑定到的窗口 `onload` 事件。当窗口加载完成时，我们可以使用 promise 构造和解析:
 
 ```js
-// onload example, the promise constructor takes a
-// 'resolver' function that tells the promise when
-// to resolve and fire off its `then` handlers.
+// onload 示例,  promise 构造函数接受一个
+// 'resolver' 函数，这告诉 promise  这告诉 promise 什么时候去解决，并触发它的 `then` 处理程序。·
 var loaded = new Promise(function(resolve, reject) {
     window.addEventListener("load", resolve);
 });
@@ -107,90 +113,88 @@ loaded.then(function() {
 });
 ```
 
-Here is another example with an API that lets us know when a connection is ready. The attempt here is imperfect and we'll describe why soon:
+下面是另一个使用 API 的例子，它可以让我们知道什么时候连接就绪。这里的尝试是不完美的，我们很快就会解释为什么：
 
 ```js
 function connect() {
-   var connection = myConnector.getConnection();  // Synchronous.
+   var connection = myConnector.getConnection();  // 同步.
    return new Promise(function(resolve, reject) {
         connection.on("ready", function() {
-            // When a connection has been established
-            // mark the promise as fulfilled.
+            // 当连接建立起来时，把 promise 变为 fulfilled。
             resolve(connection);
         });
         connection.on("error", function(e) {
-            // If it failed connecting, mark it
-            // as rejected.
-            reject(e);  // e is preferably an `Error`.
+            // 如果连接错误, 把 promise 变为 rejected
+            reject(e);  // e 最好是一个 `Error`.
         });
    });
 }
 ```
 
-The problem with the above is that `getConnection` itself might throw for some reason and if it does we'll get a synchronous rejection. An asynchronous operation should always be asynchronous to prevent double guarding and race conditions so it's best to always put the sync parts inside the promise constructor as such:
+上面的问题是 `getConnection` 本身可能会抛出一些原因，如果这样做，我们会得到一个同步拒绝。一个异步操作应该始终是异步的，以防止双重守护和竞争条件，所以最好始终将同步部分放在 promise 构造函数中，如下所示：
 
 ```js
 function connect() {
    return new Promise(function(resolve, reject) {
-        // If getConnection throws here instead of getting
-        // an exception we're getting a rejection thus
-        // producing a much more consistent API.
+        // 如果 getConnection 在这里抛出，而不是得到一个异常，我们得将获得一个拒绝，从而产生一个更一致的 API。
         var connection = myConnector.getConnection();
         connection.on("ready", function() {
-            // When a connection has been established
-            // mark the promise as fulfilled.
+            // 当连接建立起来时，把 promise 变为 fulfilled。
             resolve(connection);
         });
         connection.on("error", function(e) {
-            // If it failed connecting, mark it
-            // as rejected.
-            reject(e); //  e is preferably an `Error`
+          // 如果连接错误, 把 promise 变为 rejected
+          reject(e);  // e 最好是一个 `Error`.
         });
    });
 }
 ```
-###Working with delays/setTimeout
 
-There is no need to convert timeouts/delays to a bluebird API, bluebird already ships with the [Promise.delay](.) function for this use case. Please consult the [timers](.) section of the docs on usage and examples.
+<a href='#working-with-delays/setTimeout'></a>
+### 使用延时
 
-###Working with browser APIs
+没有必要将超时/延迟转换为 bluebird API，bluebird 已经为这个用例提供了 [Promise.delay](.) 函数。请参阅文档中有关 [timers](.) 的使用和示例部分。
 
-Often browser APIs are nonstandard and automatic promisification will fail for them. If you're running into an API that you can't promisify with [promisify](.) and [promisifyAll](.) - please consult the [working with other APIs section](#working-with-any-other-apis)
+<a href='#working-with-browser-apis'></a>
+### 使用浏览器 APIs
 
-###Working with databases
+通常，浏览器 API 是不标准的，自动的 promise化 将会失败。如果您正在使用一个 API，您无法通过 [promisify](.) 和 [promisifyAll](.) 来进行 promise化，请参考 [使用其他 APIs 部分](#working-with-any-other-apis)。
 
-For resource management in general and databases in particular, bluebird includes the powerful  [Promise.using](.) and disposers system. This is similar to `with` in Python, `using` in C#, try/resource in Java or RAII in C++ in that it lets you handle resource management in an automatic way.
+<a href='#working-with-databases'></a>
+### 使用 databases
 
-Several examples of databases follow.
+对于一般资源管理和特别是数据库，bluebird 包括强大的 [Promise.using](.)  和处置器（disposers）系统。 这与 Python 中的 `with`、C＃中的 `using`、Java 中的 try/resource和C++ 中的 RAII 类似，它使您可以自动处理资源管理。
 
-> **Note** for more examples please see the [Promise.using](.) section.
+数据库的几个例子如下：
 
-####Mongoose/MongoDB
+> **注意** 更多的例子请参阅 [Promise.using](.) 部分。
 
-Mongoose works with persistent connections and the driver takes care of reconnections/disposals. For this reason using `using` with it isn't required - instead connect on server startup and use promisification to expose promises.
+#### Mongoose/MongoDB
 
-Note that Mongoose already ships with promise support but the promises it offers are significantly slower and don't report unhandled rejections so it is recommended to use automatic promisification with it anyway:
+Mongoose 使用永久连接工作，驱动器负责重新连接/处置。出于这个原因，使用 `using` 并不是必需的 —— 而是在服务器启动时连接并使用 promise化 来暴露 promise。
+
+请注意，Mongoose 已经提供了 promise 支持，但它提供的承诺明显较慢，不报告未处理的拒绝，所以无论如何建议使用自动的 promise化：
 
 ```js
 var Mongoose = Promise.promisifyAll(require("mongoose"));
 ```
 
-####Sequelize
+#### Sequelize
 
-Sequelize already uses Bluebird promises internally and has promise returning APIs. Use those.
+Sequelize 内部已经使用了 Bluebird 的 promise，并具有返回 promise api。使用它们。
 
-####RethinkDB
+#### RethinkDB
 
-Rethink already uses Bluebird promises internally and has promise returning APIs. Use those.
+RethinkDB 内部已经使用了 Bluebird 的 promise，并具有返回 promise api。使用它们。
 
-####Bookshelf
+#### Bookshelf
 
-Bookshelf already uses Bluebird promises internally and has promise returning APIs. Use those.
+Bookshelf 内部已经使用了 Bluebird 的 promise，并具有返回 promise api。使用它们。
 
 
-####PostgreSQL
+#### PostgreSQL
 
-Here is how to create a disposer for the PostgreSQL driver:
+下面是如何为 PostgreSQL 驱动程序创建一个处置器:
 
 ```js
 var pg = require("pg");
@@ -232,7 +236,7 @@ using(getSqlConnection(), function(conn) {
 });
 ```
 
-It's also possible to use a disposer pattern (but not actual disposers) for transaction management:
+也可以为事物管理使用处置器模式 (但不是实际的 .disposer)：
 
 ```js
 
@@ -252,7 +256,7 @@ function withTransaction(fn) {
 exports.withTransaction = withTransaction;
 ```
 
-Which would let you do:
+你可以这样做:
 
 ```js
 withTransaction(tx => {
@@ -264,13 +268,13 @@ withTransaction(tx => {
 });
 ```
 
-####MySQL
+#### MySQL
 
-Here is how to create a disposer for the MySQL driver:
+下面是如何为 MySQL 驱动程序创建一个处置器：
 
 ```js
 var mysql = require("mysql");
-// Uncomment if mysql has not been properly promisified yet
+// 如果 mysql 还没有被正确的 promise化，就取消注释
 // var Promise = require("bluebird");
 // Promise.promisifyAll(mysql);
 // Promise.promisifyAll(require("mysql/lib/Connection").prototype);
@@ -291,27 +295,27 @@ function getSqlConnection() {
 module.exports = getSqlConnection;
 ```
 
-The usage pattern is similar to the PostgreSQL example above. You can also use a disposer pattern (but not an actual .disposer). See the PostgreSQL example above for instructions.
+使用模式类似于上面的 PostgreSQL 示例。您也可以使用 disposer 模式(但不是实际 .disposer)。请参阅上面的 PostgreSQ L示例，以获得指导。
 
-###More common examples
+<a href='#more-common-examples'></a>
+### 更常见的例子
 
-
-Some examples of the above practice applied to some popular libraries:
+一些将上述实践应用于一些流行的库的例子：
 
 ```js
-// The most popular redis module
+// 最受欢迎的 redis 模块
 var Promise = require("bluebird");
 Promise.promisifyAll(require("redis"));
 ```
 
 ```js
-// The most popular mongodb module
+// 最受欢迎的 mongodb 模块
 var Promise = require("bluebird");
 Promise.promisifyAll(require("mongodb"));
 ```
 
 ```js
-// The most popular mysql module
+// 最受欢迎的 mysql 模块
 var Promise = require("bluebird");
 // Note that the library's classes are not properties of the main export
 // so we require and promisifyAll them manually
@@ -394,7 +398,7 @@ var Promise = require("bluebird");
 Promise.promisifyAll(require("pg"));
 ```
 
-In all of the above cases the library made its classes available in one way or another. If this is not the case, you can still promisify by creating a throwaway instance:
+在上述所有情况下，这个库都以这样或那样的方式使其类可用。如果不是这样，您仍然可以通过创建一个一次性的实例来进行 promise化：
 
 ```js
 var ParanoidLib = require("...");
@@ -403,19 +407,20 @@ Promise.promisifyAll(Object.getPrototypeOf(throwAwayInstance));
 // Like before, from this point on, all new instances + even the throwAwayInstance suddenly support promises
 ```
 
-###Working with any other APIs
+<a href='#working-with-any-other-apis'></a>
+### 与其他 API 一起工作
 
-Sometimes you have to work with APIs that are inconsistent and do not follow a common convention.
+有时，您必须使用不一致的 API，而不遵循惯例。
 
-> **Note** Promise returning function should never throw
+> **注意** Promise 返回函数永远不会抛出
 
-For example, something like:
+例如，类似:
 
 ```js
-function getUserData(userId, onLoad, onFail) { ...
+function getUserData(userId, onLoad, onFail) { ...}
 ```
 
-We can use the promise constructor to convert it to a promise returning function:
+我们可以使用 promise 构造函数将其转换为 promise 返回函数:
 
 ```js
 function getUserDataAsync(userId) {

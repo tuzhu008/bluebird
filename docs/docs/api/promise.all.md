@@ -5,17 +5,18 @@ title: Promise.all
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.all
+
+## Promise.all
 
 ```js
 Promise.all(Iterable<any>|Promise<Iterable<any>> input) -> Promise<Array<any>>
 ```
 
-This method is useful for when you want to wait for more than one promise to complete.
+当您希望等待多个 promise 完成时，这个方法非常有用。
 
-Given an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(arrays are `Iterable`\), or a promise of an `Iterable`, which produces promises (or a mix of promises and values), iterate over all the values in the `Iterable` into an array and return a promise that is fulfilled when all the items in the array are fulfilled. The promise's fulfillment value is an array with fulfillment values at respective positions to the original array. If any promise in the array rejects, the returned promise is rejected with the rejection reason.
+给定一个[`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(数组是`Iterable`\)，或者一个可迭代的 promise，它产生 promise(或 promise 和值的混合)，迭代遍历 `Iterable` 中所有的值放入一个数组中，当数组中的所有项都履行时返回一个已履行的 promise。promise 的履行值是一个数组，在原始数组的各个位置都有对应的履行值。如果数组中的任何 promise 被拒绝，返回的 promise 将以此拒绝理由拒绝。
 
 
 ```js
@@ -28,8 +29,7 @@ Promise.all(files).then(function() {
 });
 ```
 
-
-This method is compatible with [`Promise.all`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) from native promises.
+这个方法与原生 promise 中的 [`Promise.all`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) 兼容。
 </markdown></div>
 
 <div id="disqus_thread"></div>

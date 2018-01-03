@@ -1,6 +1,6 @@
 ---
 id: support
-title: Support
+title: 支持
 ---
 
 Depending on the nature of your problem there are a few possible ways of getting help with your problem.

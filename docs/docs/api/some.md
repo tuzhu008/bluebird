@@ -5,15 +5,17 @@ title: .some
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.some
+
+## .some
 
 ```js
 .some(int count) -> Promise
 ```
 
-Same as [Promise.some(this, count)](.).
+等同于 [Promise.some(this, count)](.) 。
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

@@ -5,7 +5,7 @@ title: Built-in error types
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
 ##Built-in error types
 

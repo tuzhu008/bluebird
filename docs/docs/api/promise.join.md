@@ -5,9 +5,10 @@ title: Promise.join
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.join
+
+## Promise.join
 
 ```js
 Promise.join(
@@ -16,8 +17,7 @@ Promise.join(
 ) -> Promise
 ```
 
-
-For coordinating multiple concurrent discrete promises. While [`.all`](.) is good for handling a dynamically sized list of uniform promises, `Promise.join` is much easier (and more performant) to use when you have a fixed amount of discrete promises that you want to coordinate concurrently. The final parameter, handler function, will be invoked with the result values of all of the fufilled promises. For example:
+用于整合多个并发的离散的 promise。 尽管 [`.all`](.) 适用于处理动态大小的统一 promise 列表，但是当您有一个固定数量的想要并行整合的离散 promise 时，使用 `Promise.join` 会更容易（也更高效）。 最后一个参数是处理函数，使用所有的履行了 promise 的结果值进行调用。 例如：
 
 ```js
 var Promise = require("bluebird");
@@ -69,7 +69,7 @@ join(fContents, fStat, fSqlClient, function(contents, stat, sqlClient) {
 });
 ```
 
-*Note: In 1.x and 0.x `Promise.join` used to be a `Promise.all` that took the values in as arguments instead of an array. This behavior has been deprecated but is still supported partially - when the last argument is an immediate function value the new semantics will apply*
+*注意: 在 1.x 和 0.x 中，`Promise.join` 曾经被作为`Promise.all` 使用，它把所有的值作为参数，而不是数组。这种行为已经被弃用，但仍然得到部分支持——当最后一个参数是一个即时的函数时，新的语义将会应用。*
 </markdown></div>
 
 <div id="disqus_thread"></div>

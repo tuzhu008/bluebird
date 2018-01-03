@@ -1,70 +1,77 @@
 ---
 id: features
-title: Features
+title: 特性
 ---
 
 [features](unfinished-article)
 
 
-- [Synchronous inspection](#synchronous-inspection)
-- [Concurrency coordination](#concurrency-coordination)
+- [同步检查](#synchronous-inspection)
+- [并发协调](#concurrency-coordination)
 - [Promisification on steroids](#promisification-on-steroids)
-- [Debuggability and error handling](#debuggability-and-error-handling)
-- [Resource management](#resource-management)
-- [Cancellation and timeouts](#cancellation-and-timeouts)
-- [Scoped prototypes](#scoped-prototypes)
-- [Promise monitoring](#promise-monitoring)
+- [可调试性 和错误处理](#debuggability-and-error-handling)
+- [资源管理](#resource-management)
+- [取消和超时](#cancellation-and-timeouts)
+- [作用域原型](#scoped-prototypes)
+- [Promise 监控](#promise-monitoring)
 - [Async/Await](#async-await)
 
-##Synchronous inspection
+<a id='synchronous-inspection'></a>
+## 同步检查
 
-Synchronous inspection allows you to retrieve the fulfillment value of an already fulfilled promise or the rejection reason of an already rejected promise synchronously.
+同步检查允许您检索 promise 的完成值或被拒绝原因。
 
-Often it is known in certain code paths that a promise is guaranteed to be fulfilled at that point - it would then be extremely inconvenient to use [`.then`](.) to get at the promise's value as the callback is always called asynchronously.
+通常在某些代码路径中已经知道在这一点上保证了 promise - 那么使用 [`.then`](.) 来获得 promise 的值是非常不方便的，因为回调总是被异步调用的。
 
-See the API on [synchronous inspection](.) for more information.
+有关更多信息，请参阅 [synchronous inspection](.) 的 API。
 
-##Concurrency coordination
+<a id='concurrency-coordination'></a>
+## 并发协调
+
+通过使用 [.each](.) 和 [.map](.)，在恰当的并发级别上执行操作变得轻而易举。
+
+
+
 
 Through the use of [.each](.) and [.map](.) doing things just at the right concurrency level becomes a breeze.
 
-##Promisification on steroids
+## Promisification on steroids
 
-Promisification means converting an existing promise-unaware API to a promise-returning API.
-
+Promise化(Promisification) 意味着将现有的非 promise 的 API 转换成 返回 promise 的 API。
 The usual way to use promises in node is to [Promise.promisifyAll](.) some API and start exclusively calling promise returning versions of the APIs methods. E.g.
+在 node 中使用 promise 的常用方法是使用 [Promise.promisifyAll](.) 来 promise化 一些 API 并开始专门调用 API 方法的 promise返回版本 。 例如:
 
 ```js
 var fs = require("fs");
 Promise.promisifyAll(fs);
-// Now you can use fs as if it was designed to use bluebird promises from the beginning
+// 现在你可以使用 fs，就好像它被设计成从一开始就使用 bluebird promise
 
 fs.readFileAsync("file.js", "utf8").then(...)
 ```
 
-Note that the above is an exceptional case because `fs` is a singleton instance. Most libraries can be promisified by requiring the library's classes (constructor functions) and calling promisifyAll on the `.prototype`. This only needs to be done once in the entire application's lifetime and after that you may use the library's methods exactly as they are documented, except by appending the `"Async"`-suffix to method calls and using the promise interface instead of the callback interface.
+请注意，以上是一个例外情况，因为 `fs` 是一个单体实例。通过 require 库的类（构造函数）并在 `.prototype` 上调用 `promisifyAll`，大多数库都可以被 promise化。 这只需要在整个应用程序的生命周期中完成一次，然后就可以按照文档的方式使用库的方法，除了在方法调用中附加 `"Async"` 后缀并使用 promise 接口而不是回调函数接口。
 
-As a notable exception in `fs`, `fs.existsAsync` doesn't work as expected, because Node's `fs.exists` doesn't call back with error as first argument.  More at [#418](.).  One possible workaround is using `fs.statAsync`.
+作为 `fs` 中一个明显的例外，`fs.existsAsync` 不能按预期工作，因为 Node 的 `fs.exists` 不会以错误作为回调的第一个参数。 更多在[#418](.)。 一个可能的解决方法是使用 `fs.statAsync`。
 
-Some examples of the above practice applied to some popular libraries:
+一些上述实践被应用于一些流行的库的例子：
 
 ```js
-// The most popular redis module
+// 最受欢迎的 redis 模块
 var Promise = require("bluebird");
 Promise.promisifyAll(require("redis"));
 ```
 
 ```js
-// The most popular mongodb module
+// 最受欢迎的 mongodb 模块
 var Promise = require("bluebird");
 Promise.promisifyAll(require("mongodb"));
 ```
 
 ```js
-// The most popular mysql module
+// 最受欢迎的 mysql 模块
 var Promise = require("bluebird");
-// Note that the library's classes are not properties of the main export
-// so we require and promisifyAll them manually
+// 注意，库的类不是主导出的属性
+// 因此，我们需要手动进行 require 和 promisifyAll
 Promise.promisifyAll(require("mysql/lib/Connection").prototype);
 Promise.promisifyAll(require("mysql/lib/Pool").prototype);
 ```
@@ -144,43 +151,46 @@ var Promise = require("bluebird");
 Promise.promisifyAll(require("pg"));
 ```
 
-In all of the above cases the library made its classes available in one way or another. If this is not the case, you can still promisify by creating a throwaway instance:
+在上述所有情况中，这个库都以这样或那样的方式使其类可用。如果不是这样，您仍然可以通过创建一个一次性的实例来进行 promise化:
+
 
 ```js
 var ParanoidLib = require("...");
 var throwAwayInstance = ParanoidLib.createInstance();
 Promise.promisifyAll(Object.getPrototypeOf(throwAwayInstance));
-// Like before, from this point on, all new instances + even the throwAwayInstance suddenly support promises
+// 像前面的那样，从这个点开始，所有的新实例 + 甚至是 throwAwayInstance 都突然支持承诺
 ```
 
-See also [`Promise.promisifyAll`](.).
+参见[`Promise.promisifyAll`](.).
 
-##Debuggability and error handling
+## 可调试性和错误处理
 
- - [Surfacing unhandled errors](#surfacing-unhandled-errors)
- - [Long stack traces](#long-stack-traces)
- - [Error pattern matching](#error-pattern-matching)
- - [Warnings](#warnings)
+ - [处理未被处理的错误](#surfacing-unhandled-errors)
+ - [长堆栈跟踪](#long-stack-traces)
+ - [错误模式匹配](#error-pattern-matching)
+ - [警告](#warnings)
 
-###Surfacing unhandled errors
+<a href='surfacing-unhandled-errors'></a>
+### 处理未被处理的错误
 
-The default approach of bluebird is to immediately log the stack trace when there is an unhandled rejection. This is similar to how uncaught exceptions cause the stack trace to be logged so that you have something to work with when something is not working as expected.
+bluebird 的默认途径是在存在未处理的拒绝时立即记录堆栈跟踪。 这与未捕获的异常如何导致堆栈跟踪被记录相似，以便在某些事情没有按预期工作时有一些可以工作。
 
-However because it is possible to handle a rejected promise at any time in the indeterminate future, some programming patterns will result in false positives. Because such programming patterns are not necessary and can always be refactored to never cause false positives, we recommend doing that to keep debugging as easy as possible . You may however feel differently so bluebird provides hooks to implement more complex failure policies.
+但是，由于在未来不确定的任何时候可以随时处理被拒绝的承诺，所以一些编程模式会导致误报。 因为这样的编程模式不是必须的，并且总是可以重构而不会造成误报，所以我们建议尽可能保持简单的调试。你可能会有不同的感觉，所以 bluebird 提供钩子来实现更复杂的故障策略。
 
-Such policies could include:
+这些政策可能包括：
 
-- Logging after the promise became GCd (requires a native node.js module)
-- Showing a live list of rejected promises
-- Using no hooks and using [`.done`](.) to manually to mark end points where rejections will not be handled
-- Swallowing all errors (challenge your debugging skills)
-- ...
+  - promise 变成 GCd 之后的日志 (requires a native node.js module)
+  - 展示一份被拒绝的 promises 清单
+  - 不使用钩子，并使用 [`.done`](.) 来手动地标记结束点，在那里，拒绝不会被处理
+  - 容忍所有错误 (挑战你的调试技能)
+  - ...
 
-See [global rejection events](http://bluebirdjs.com/docs/api/error-management-configuration.html#global-rejection-events) to learn more about the hooks.
+参见 [全局拒绝事件](https://tuzhu008.github.io/bluebird_cn/docs/api/error-management-configuration.html#global-rejection-events) 了解更多关于钩子的信息。
 
-###Long stack traces
+<a href='long-stack-traces'></a>
+### 长堆栈跟踪
 
-Normally stack traces don't go beyond asynchronous boundaries so their utility is greatly reduced in asynchronous code:
+通常，堆栈跟踪不会超出异步界限，因此在异步代码中它们的效用会大大减少:
 
 ```js
 setTimeout(function() {
@@ -198,9 +208,9 @@ ReferenceError: a is not defined
     at Timer.listOnTimeout (timers.js:90:15)
 ```
 
-Of course you could use hacks like monkey patching or domains but these break down when something can't be monkey patched or new apis are introduced.
+当然，你可以使用像 monkey 补丁或域名这样的黑客工具，但是当某些东西不能被 monkey 修复或者新的 api 被引入时，这些就会被打破。
 
-Since in bluebird [promisification](.) is made trivial, you can get long stack traces all the time:
+因为在bluebird  [promisification](.) 的过程中，你可以得到很长时间的堆栈跟踪:
 
 ```js
 var Promise = require("bluebird");
@@ -227,77 +237,85 @@ From previous event:
     at node.js:799:3
 ```
 
-And there is more. Bluebird's long stack traces additionally eliminate cycles, don't leak memory, are not limited to a certain amount of asynchronous boundaries and are fast enough for most applications to be used in production. All these are non-trivial problems that haunt straight-forward long stack trace implementations.
+还有更多。Bluebird 的长堆栈跟踪还可以消除循环，不泄漏内存，不局限于一定数量的异步边界，而且对于大多数应用程序来说都足够快，可以在生产中使用。所有这些都是很重要的问题，这些问题一直困扰着长堆栈跟踪实现。
 
-See [installation](install.html) on how to enable long stack traces in your environment.
+关于如何在您的环境中启用长堆栈跟踪，请参见 [installation](install.html) 。
 
-###Error pattern matching
+<a href='error-pattern-matching'></a>
+### 错误模式匹配
 
-Perhaps the greatest thing about promises is that it unifies all error handling into one mechanism where errors propagate automatically and have to be explicitly ignored.
 
-###Warnings
+也许关于 promises 的最重要的一点是它将所有的错误处理统一到一个机制中，其中错误自动地传播，并且必须被显式地忽略。
 
-Promises can have a steep learning curve and it doesn't help that promise standards go out of their way to make it even harder. Bluebird works around the limitations by providing warnings where the standards disallow throwing errors when incorrect usage is detected. See [Warning Explanations](warning-explanations.html) for the possible warnings that bluebird covers.
+<a href='warnings'></a>
+### 警告
 
-See [installation](install.html) on how to enable warnings in your environment.
+Promises 可能会有一个陡峭的学习曲线，但这并不会帮助那些 promise 的标准变得更加困难。Bluebird 通过提供警告来绕过限制，在检测到错误的用法时，标准不允许抛出错误。请参阅 [Warning Explanations](warning-explanations.html)，以了解 bluebird 所覆盖的可能的警告。
 
-Note - in order to get full stack traces with warnings in Node 6.x+ you need to enable to `--trace-warnings` flag which will give you a full stack trace of where the warning is coming from.
+关于如何在您的环境中启用警告，请参阅 [installation](install.html)。
 
-###Promise monitoring
+注意-为了在 Node 6.x+ 中获得完整的堆栈跟踪信息，你需要启用 `--trace-warnings` 标记，它将为您提供一个完整的堆栈跟踪，说明警告来自哪里。
 
-This feature enables subscription to promise lifecycle events via standard global events mechanisms in browsers and Node.js.
+<a href='promise-monitoring'></a>
+### Promise 监控
 
-The following lifecycle events are available: 
+该特性可以通过浏览器和 node.js 中的标准全局事件机制来订阅 promise 生命周期事件。
 
- - `"promiseCreated"` - Fired when a promise is created through the constructor.
- - `"promiseChained"` - Fired when a promise is created through chaining (e.g. [.then](.)).
- - `"promiseFulfilled"` - Fired when a promise is fulfilled.
- - `"promiseRejected"` - Fired when a promise is rejected.
- - `"promiseResolved"` - Fired when a promise adopts another's state.
- - `"promiseCancelled"` - Fired when a promise is cancelled.
+下面的生命周期事件是可用的:
 
-This feature has to be explicitly enabled by calling [Promise.config](.) with `monitoring: true`.
+ - `"promiseCreated"`   - 当 promise 通过构造函数创建时被触发。
+ - `"promiseChained"`   - 当 promise 通过链创建时被触发 (例如 [.then](.))。
+ - `"promiseFulfilled"` - 当 promise 完成时被触发。
+ - `"promiseRejected"`  - 当 promise 被拒绝时触发。
+ - `"promiseResolved"`  - 当 promise 采取另一种状态时被触发。
+ - `"promiseCancelled"` - 当 promose 被取消时被触发。
 
-The actual subscription API depends on the environment.
+ 这个特性必须通过使用 `monitoring: true` 调用 [Promise.config](.) 来显式地启用。
 
-1\. In Node.js, use `process.on`:
+ 实际的订阅 API 依赖于环境。
+
+
+1\. 在 Node.js 中，使用 `process.on`:
 
 ```js
-// Note the event name is in camelCase, as per Node.js convention.
+// 注意，事件名为驼峰模式，与 Node.js 约定一样
 process.on("promiseChained", function(promise, child) {
-    // promise - The parent promise the child was chained from
-    // child - The created child promise.
+    // promise - 从链生成的子 promise 的父 promise
+    // child - 被创建的子 promise.
 });
 ```
 
-2\. In modern browsers use `window.addEventListener` (window context) or `self.addEventListener()` (web worker or window context) method:
+2\. 在现代浏览器中使用 `window.addEventListener` (window context) 或者 `self.addEventListener()` (web worker or window context) 方法:
 
 ```js
-// Note the event names are in mashedtogetherlowercase, as per DOM convention.
+// 注意， 事件名称为全小写，与 DOM 约定一样
 self.addEventListener("promisechained", function(event) {
-    // event.details.promise - The parent promise the child was chained from
-    // event.details.child - The created child promise.
+    // event.details.promise - 从链生成的子 promise 的父 promise
+    // event.details.child - 被创建的子 promise
 });
 ```
 
-3\. In legacy browsers use `window.oneventname = handlerFunction;`.
+3\. 在遗留浏览器使用 `window.oneventname = handlerFunction;`.
 
 ```js
-// Note the event names are in mashedtogetherlowercase, as per legacy convention.
+// 注意，事件名称为全小写，与 DOM 约定一样
 window.onpromisechained = function(promise, child) {
-    // event.details.promise - The parent promise the child was chained from
-    // event.details.child - The created child promise.
+    // event.details.promise - 从链生成的子 promise 的父 promise
+    // event.details.child - 被创建的子 promise
 };
 ```
 
-##Resource management
+<a href='resource-management'></a>
+## 资源管理
 
-##Cancellation and timeouts
 
-See [`Cancellation`](.) for how to use cancellation.
+<a href='cancellation-and-timeouts'></a>
+## 取消和超时
+
+参见 [`Cancellation`](.) 获取如何使用取消。
 
 ```js
-// Enable cancellation
+// 启用 cancellation
 Promise.config({cancellation: true});
 
 var fs = Promise.promisifyAll(require("fs"));
@@ -315,20 +333,18 @@ process.on('unhandledException', function(event) {
 });
 ```
 
-##Scoped prototypes
+## 作用域原型
 
-Building a library that depends on bluebird? You should know about the "scoped prototype" feature.
+建立一个依赖于 bluebird 的库?您应该了解 "作用域原型" 特性。
 
-If your library needs to do something obtrusive like adding or modifying methods on the `Promise` prototype, uses long stack traces or uses a custom unhandled rejection handler then... that's totally ok as long as you don't use `require("bluebird")`. Instead you should create a file
-that creates an isolated copy. For example, creating a file called `bluebird-extended.js` that contains:
+如果您的库需要做一些突出的事情，比如在 `Promise` 原型中添加或修改方法，使用长堆栈跟踪或使用自定义的未处理拒绝的处理程序。只要你不使用 `require("bluebird")`，那就完全可以了。相反，您应该创建一个创建独立副本的文件。例如，创建一个名为 `bluebird-extended.js` 的文件，它包含:
 
 ```js
-                //NOTE the function call right after
+                //注意 这个函数正确调用了之后
 module.exports = require("bluebird/js/main/promise")();
 ```
 
-Your library can then use `var Promise = require("bluebird-extended");` and do whatever it wants with it. Then if the application or other library uses their own bluebird promises they will all play well together because of Promises/A+ thenable assimilation magic.
+然后你的库可以使用 `var Promise = require("bluebird-extended");` 并且用它做任何事情。然后，如果应用程序或其他库使用自己的 bluebird promises，他们将会因为 Promises/A+ 可靠的同化魔术而一起发挥出色。
 
 
-##Async/Await
-
+## Async/Await

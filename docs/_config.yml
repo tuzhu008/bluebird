@@ -1,7 +1,7 @@
-name: bluebird
+name: bluebird 中文
 description: Bluebird is a fully featured JavaScript promises library with unmatched performance.
-url: "https://tuzhu008.github.io/gitbook-bluebird_cn/"
-baseurl: ""
+url: "https://tuzhu008.github.io"
+baseurl: "/bluebird_cn"
 title: bluebird
 timezone: Helsinki/Finland
 highlighter: pygments

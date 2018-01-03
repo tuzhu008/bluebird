@@ -5,45 +5,46 @@ title: Promisification
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promisification
 
-Promisification means converting an existing promise-unaware API to a promise-returning API.
+## Promisification
 
-The usual way to use promises in node is to [Promise.promisifyAll](.) some API and start exclusively calling promise returning versions of the APIs methods. E.g.
+Promisification 意味着将现有的非 promise 的 API 转换成 promise返回的 API。
+
+在 node 中使用 Promise 的通常方法是 [Promise.promisifyAll](.) 一些 API，并开始专门调用 promise返回版本的 API方法的。 例如：
 
 ```js
 var fs = require("fs");
 Promise.promisifyAll(fs);
-// Now you can use fs as if it was designed to use bluebird promises from the beginning
+// 现在你可以使用 fs，就好像它被设计成从一开始就使 bluebird promises
 
 fs.readFileAsync("file.js", "utf8").then(...)
 ```
 
-Note that the above is an exceptional case because `fs` is a singleton instance. Most libraries can be promisified by requiring the library's classes (constructor functions) and calling promisifyAll on the `.prototype`. This only needs to be done once in the entire application's lifetime and after that you may use the library's methods exactly as they are documented, except by appending the `"Async"`-suffix to method calls and using the promise interface instead of the callback interface.
+请注意，以上是一个例外情况，因为 `fs` 是一个单体实例。通过 require 库的类（构造函数）并在 `.prototype` 上调用 `promisifyAll`，大多数库都可以被 promise化。 这只需要在整个应用程序的生命周期中完成一次，然后就可以按照文档的方式使用库的方法，除了在方法调用中附加 `"Async"` 后缀并使用 promise 接口而不是回调函数接口。
 
-As a notable exception in `fs`, `fs.existsAsync` doesn't work as expected, because Node's `fs.exists` doesn't call back with error as first argument.  More at [#418](.).  One possible workaround is using `fs.statAsync`.
+作为 `fs` 中一个明显的例外，`fs.existsAsync` 不能按预期工作，因为 Node 的 `fs.exists` 不会以错误作为回调的第一个参数。 更多在[#418](.)。 一个可能的解决方法是使用 `fs.statAsync`。
 
-Some examples of the above practice applied to some popular libraries:
+一些上述实践被应用于一些流行的库的例子：
 
 ```js
-// The most popular redis module
+// 最受欢迎的 redis 模块
 var Promise = require("bluebird");
 Promise.promisifyAll(require("redis"));
 ```
 
 ```js
-// The most popular mongodb module
+// 最受欢迎的 mongodb 模块
 var Promise = require("bluebird");
 Promise.promisifyAll(require("mongodb"));
 ```
 
 ```js
-// The most popular mysql module
+// 最受欢迎的 mysql 模块
 var Promise = require("bluebird");
-// Note that the library's classes are not properties of the main export
-// so we require and promisifyAll them manually
+// 注意，库的类不是主导出的属性
+// 因此，我们需要手动进行 require 和 promisifyAll
 Promise.promisifyAll(require("mysql/lib/Connection").prototype);
 Promise.promisifyAll(require("mysql/lib/Pool").prototype);
 ```
@@ -123,16 +124,18 @@ var Promise = require("bluebird");
 Promise.promisifyAll(require("pg"));
 ```
 
-In all of the above cases the library made its classes available in one way or another. If this is not the case, you can still promisify by creating a throwaway instance:
+
+在上述所有情况中，这个库都以这样或那样的方式使其类可用。如果不是这样，您仍然可以通过创建一个一次性的实例来进行 promise化:
 
 ```js
 var ParanoidLib = require("...");
 var throwAwayInstance = ParanoidLib.createInstance();
 Promise.promisifyAll(Object.getPrototypeOf(throwAwayInstance));
-// Like before, from this point on, all new instances + even the throwAwayInstance suddenly support promises
+// 像前面的那样，从这个点开始，所有的新实例 + 甚至是 throwAwayInstance 都突然支持承诺
 ```
 
-See also [`Promise.promisifyAll`](.).
+参见[`Promise.promisifyAll`](.)。
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

@@ -1,6 +1,6 @@
 ---
 id: deprecated_apis
-title: Deprecated APIs
+title: 弃用的 API
 ---
 
 This file contains documentation for APIs that are no longer supported by Bluebird.

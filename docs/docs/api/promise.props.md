@@ -5,21 +5,22 @@ title: Promise.props
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.props
+
+## Promise.props
 
 ```js
 Promise.props(Object|Map|Promise<Object|Map> input) -> Promise
 ```
 
-Like [`.all`](.) but for object properties or `Map`s\* entries instead of iterated values. Returns a promise that is fulfilled when all the properties of the object or the `Map`'s' values\*\* are fulfilled. The promise's fulfillment value is an object or a `Map` with fulfillment values at respective keys to the original object or a `Map`. If any promise in the object or `Map` rejects, the returned promise is rejected with the rejection reason.
+像 [`.all`](.) ，但是用于对象属性或 `Map` \* 条目而不是迭代值。当对象的所有属性或 `Map` 的值 \*\* 都被履行时，返回一个已履行的 promise。这个 promise 的履行值是一个对象或者一个 `Map`，它们带有与原始对象或 `Map` 相同的键。如果对象或 `Map` 中的任何 promise 被拒绝，将使用此拒绝原因返回一个拒绝的 promise。
+
+如果 `object` 是一个可信的 `Promise`，然后，它将被看作是对象的 promise，而不是它的属性。所有其他对象（`Map`s 除外）都被视为它们的属性，就像 `Object.keys` 所返回的那样 - 对象本身的可枚举属性。
 
-If `object` is a trusted `Promise`, then it will be treated as a promise for object rather than for its properties. All other objects (except `Map`s) are treated for their properties as is returned by `Object.keys` - the object's own enumerable properties.
+*\*只有由环境提供的原生 [ECMAScript 6 `Map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) 实现才被支持*
 
-*\*Only the native [ECMAScript 6 `Map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) implementation that is provided by the environment as is is supported*
-
-*\*\*If the map's keys happen to be `Promise`s, they are not awaited for and the resulting `Map` will still have those same `Promise` instances as keys*
+*\*\*果 map 的键碰巧是 `Promise`，那么它们就不会被等待，结果 `Map` 将仍然具有与键相同的 `Promise` 实例*
 
 
 ```js
@@ -83,7 +84,8 @@ directorySizeInfo(process.argv[2] || ".").then(function(sizeInfo) {
 });
 ```
 
-Note that if you have no use for the result object other than retrieving the properties, it is more convenient to use [`Promise.join`](.):
+请注意，如果您除了检索属性之外没有使用结果对象，
+使用 [`Promise.join`](.) 更方便:
 
 ```js
 Promise.join(getPictures(), getComments(), getTweets(),

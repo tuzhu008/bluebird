@@ -5,11 +5,13 @@ title: Core
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Core
 
-Core methods of `Promise` instances and core static methods of the Promise class.
+## Core
+
+`Promise` 实例的核心方法和 Promse 类的核心静态方法。
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

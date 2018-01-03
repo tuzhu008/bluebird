@@ -5,15 +5,17 @@ title: .bind
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.bind
+
+## .bind
 
 ```js
 .bind(any|Promise<any> thisArg) -> BoundPromise
 ```
 
-Same as calling [Promise.bind(thisArg, thisPromise)](.).
+与调用 [Promise.bind(thisArg, thisPromise)](.) 一样。
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

@@ -5,15 +5,16 @@ title: .props
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.props
+
+## .props
 
 ```js
 .props() -> Promise
 ```
 
-Same as [Promise.props(this)](.).
+等同于 [Promise.props(this)](.)。
 </markdown></div>
 
 <div id="disqus_thread"></div>

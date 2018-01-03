@@ -5,9 +5,10 @@ title: Promise.some
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.some
+
+# Promise.some
 
 ```js
 Promise.some(
@@ -16,9 +17,9 @@ Promise.some(
 ) -> Promise
 ```
 
-Given an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(arrays are `Iterable`\), or a promise of an `Iterable`, which produces promises (or a mix of promises and values), iterate over all the values in the `Iterable` into an array and return a promise that is fulfilled as soon as `count` promises are fulfilled in the array. The fulfillment value is an array with `count` values in the order they were fulfilled.
+给定一个[`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(数组是`Iterable`\)，或者一个可迭代的 promise，它产生 promise(或 promise 和值的混合)，迭代遍历 `Iterable` 中所有的值放入一个数组中，一旦数组中的 有 `count` 个 promise 被履行则返回一个已履行的 promise。promise 的履行值是一个带有 `count` 值的数组，按照它们履行的顺序。
 
-This example pings 4 nameservers, and logs the fastest 2 on console:
+这个例子是 ping 的 4 个命名服务器，并在控制台上记录最快的2 台: 
 
 ```js
 Promise.some([
@@ -31,9 +32,9 @@ Promise.some([
 });
 ```
 
-If too many promises are rejected so that the promise can never become fulfilled, it will be immediately rejected with an [AggregateError](.) of the rejection reasons in the order they were thrown in.
+如果太多的 promise 被拒绝，以至于 promise 永远无法兑现，那么它就使用拒绝理由的 [AggregateError](.) 立即拒绝，a按照它们被扔进去的顺序。
 
-You can get a reference to [AggregateError](.) from `Promise.AggregateError`.
+你可以从 `Promise.AggregateError` 获得一个[AggregateError](.) 的引用。
 
 ```js
 Promise.some(...)

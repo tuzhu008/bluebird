@@ -1,6 +1,6 @@
 ---
 id: api-reference
-title: API Reference
+title: API 参考
 redirect_from: "/docs/api/index.html"
 ---
 
@@ -8,7 +8,7 @@ redirect_from: "/docs/api/index.html"
 <div class="api-reference-menu">
 <markdown>
 
-- [Core](api/core.html)
+- [核心](api/core.html)
     - [new Promise](api/new-promise.html)
     - [.then](api/then.html)
     - [.spread](api/spread.html)
@@ -21,7 +21,7 @@ redirect_from: "/docs/api/index.html"
     - [Promise.method](api/promise.method.html)
     - [Promise.resolve](api/promise.resolve.html)
     - [Promise.reject](api/promise.reject.html)
-- [Synchronous inspection](api/synchronous-inspection.html)
+- [同步检查](api/synchronous-inspection.html)
     - [PromiseInspection](api/promiseinspection.html)
     - [.isFulfilled](api/isfulfilled.html)
     - [.isRejected](api/isrejected.html)
@@ -29,7 +29,7 @@ redirect_from: "/docs/api/index.html"
     - [.isCancelled](api/iscancelled.html)
     - [.value](api/value.html)
     - [.reason](api/reason.html)
-- [Collections](api/collections.html)
+- [集合](api/collections.html)
     - [Promise.all](api/promise.all.html)
     - [Promise.props](api/promise.props.html)
     - [Promise.any](api/promise.any.html)
@@ -49,24 +49,24 @@ redirect_from: "/docs/api/index.html"
     - [.filter](api/filter.html)
     - [.each](api/each.html)
     - [.mapSeries](api/mapseries.html)
-- [Resource management](api/resource-management.html)
+- [资源管理](api/resource-management.html)
     - [Promise.using](api/promise.using.html)
     - [.disposer](api/disposer.html)
-- [Promisification](api/promisification.html)
+- [Promise化](api/promisification.html)
     - [Promise.promisify](api/promise.promisify.html)
     - [Promise.promisifyAll](api/promise.promisifyall.html)
     - [Promise.fromCallback](api/promise.fromcallback.html)
     - [.asCallback](api/ascallback.html)
-- [Timers](api/timers.html)
+- [计时器](api/timers.html)
     - [Promise.delay](api/promise.delay.html)
     - [.delay](api/delay.html)
     - [.timeout](api/timeout.html)
-- [Cancellation](api/cancellation.html)
+- [取消](api/cancellation.html)
     - [.cancel](api/cancel.html)
 - [Generators](api/generators.html)
     - [Promise.coroutine](api/promise.coroutine.html)
     - [Promise.coroutine.addYieldHandler](api/promise.coroutine.addyieldhandler.html)
-- [Utility](api/utility.html)
+- [实用程序](api/utility.html)
     - [.tap](api/tap.html)
     - [.tapCatch](api/tapcatch.html)
     - [.call](api/call.html)
@@ -79,12 +79,12 @@ redirect_from: "/docs/api/index.html"
     - [Promise.getNewLibraryCopy](api/promise.getnewlibrarycopy.html)
     - [Promise.noConflict](api/promise.noconflict.html)
     - [Promise.setScheduler](api/promise.setscheduler.html)
-- [Built-in error types](api/built-in-error-types.html)
+- [内置错误类型](api/built-in-error-types.html)
     - [OperationalError](api/operationalerror.html)
     - [TimeoutError](api/timeouterror.html)
     - [CancellationError](api/cancellationerror.html)
     - [AggregateError](api/aggregateerror.html)
-- [Configuration](api/error-management-configuration.html)
+- [配置](api/error-management-configuration.html)
     - [Global rejection events](api/error-management-configuration.html#global-rejection-events)
     - [Local rejection events](api/promise.onpossiblyunhandledrejection.html)
     - [Promise.config](api/promise.config.html)
@@ -92,7 +92,7 @@ redirect_from: "/docs/api/index.html"
     - [.done](api/done.html)
 - [Progression migration](api/progression-migration.html)
 - [Deferred migration](api/deferred-migration.html)
-- [Environment variables](api/environment-variables.html)
+- [环境变量](api/environment-variables.html)
 
 </markdown>
 </div>

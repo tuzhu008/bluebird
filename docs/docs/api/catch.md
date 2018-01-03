@@ -5,42 +5,43 @@ title: .catch
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.catch
 
-`.catch` is a convenience method for handling errors in promise chains. 
-It comes in two variants 
- - A catch-all variant similar to the synchronous `catch(e) {` block. This variant is compatible with native promises. 
- - A filtered variant (like other non-JS languages typically have) that lets you only handle specific errors. **This variant is usually preferable and is significantly safer**. 
+## .catch
 
-### A note on promise exception handling.
+`.catch` 是处理 promise 链中错误的一个方便的方法。它有两个变种：
 
-Promise exception handling mirrors native exception handling in JavaScript. A synchronous function `throw`ing is similar to a promise rejecting. Here is an example to illustrate it:
+ - catch-all 变种，类似于同步的 `catch(e) {` 块。 这个变中与原生 promise 兼容。
+ - filtered 变种 (像其他非JS语言一样) ，这让你只能处理特定的错误。 **这种变种通常更可取，而且更安全**.
+
+### 关于 promise 异常处理
+
+Promise 异常处理在 JavaScript 中反映了原生的异常处理。同步函数的 `throw` 类似于 promise 的拒绝。这里有一个例子来说明它:
 
 ```js
 function getItems(param) {
-    try { 
+    try {
         var items = getItemsSync();
-        if(!items) throw new InvalidItemsError();  
-    } catch(e) { 
+        if(!items) throw new InvalidItemsError();
+    } catch(e) {
         // can address the error here, either from getItemsSync returning a falsey value or throwing itself
-        throw e; // need to re-throw the error unless I want it to be considered handled. 
+        throw e; // need to re-throw the error unless I want it to be considered handled.
     }
     return process(items);
 }
 ```
 
-Similarly, with promises:
+类似的，使用 promises:
 
 ```js
 function getItems(param) {
     return getItemsAsync().then(items => {
-        if(!items) throw new InvalidItemsError(); 
+        if(!items) throw new InvalidItemsError();
         return items;
     }).catch(e => {
-        // can address the error here and recover from it, from getItemsAsync rejects or returns a falsey value
-        throw e; // Need to rethrow unless we actually recovered, just like in the synchronous version
+        // 可以在这里解决错误，并从 getItemsAsync 拒绝中恢复，或返回 falsey 值
+        throw e; // 除非我们实际恢复，否则需要重新抛出，就像在同步版本中一样
     }).then(process);
 }
 ```
@@ -50,15 +51,18 @@ function getItems(param) {
 ```js
 .catch(function(any error) handler) -> Promise
 ```
+
 ```js
 .caught(function(any error) handler) -> Promise
 ```
 
-This is a catch-all exception handler, shortcut for calling [`.then(null, handler)`](.) on this promise. Any exception happening in a `.then`-chain will propagate to nearest `.catch` handler.
+这是一个 catch-all 异常处理程序， 在此 promise 上调用 [`.then(null, handler)`](.) 的快捷方式。
+任何发生在 `.then` 链中的异常都会传播到最近的 `.catch` 处理程序。
 
-*For compatibility with earlier ECMAScript versions, an alias `.caught` is provided for [`.catch`](.).*
 
-### Filtered Catch 
+*为了与以前的 ECMAScript 版本兼容，为 [`.catch`](.) 提供了别名 `.caught`。*
+
+### Filtered Catch
 
 ```js
 .catch(
@@ -72,48 +76,48 @@ This is a catch-all exception handler, shortcut for calling [`.then(null, handle
     function(any error) handler
 ) -> Promise
 ```
-This is an extension to [`.catch`](.) to work more like catch-clauses in languages like Java or C#. Instead of manually checking `instanceof` or `.name === "SomeError"`, you may specify a number of error constructors which are eligible for this catch handler. The catch handler that is first met that has eligible constructors specified, is the one that will be called.
 
-Example:
+这是 [`.catch`](.) 的扩展，使其更像在 Java 或 C＃ 等语言中的 catch-clause。 你可以指定一个符合这个 catch 处理程序的错误构造函数的数字，而不是手动检查 `instanceof` 或 `.name === "SomeError"`。 第一个遇到的符合指定构造函数的 catch 处理程序将被调用。
+
+示例:
 
 ```js
 somePromise.then(function() {
     return a.b.c.d();
 }).catch(TypeError, function(e) {
-    //If it is a TypeError, will end up here because
-    //it is a type error to reference property of undefined
+    // 如果是一个 TypeError，将在出现在这里
+    // 因为引用未定义属性是一个类型错误
 }).catch(ReferenceError, function(e) {
-    //Will end up here if a was never declared at all
+    // 如果从未在任何提防声明，将在出现在这里
 }).catch(function(e) {
-    //Generic catch-the rest, error wasn't TypeError nor
-    //ReferenceError
+    //通用的 catch, 错误既不是 TypeError 也不是 ReferenceError
 });
  ```
 
-You may also add multiple filters for a catch handler:
+您还可以为一个 catch 处理程序添加多个过滤器:
 
 ```js
 somePromise.then(function() {
     return a.b.c.d();
 }).catch(TypeError, ReferenceError, function(e) {
-    //Will end up here on programmer error
+    // 程序错误时将出现在这里
 }).catch(NetworkError, TimeoutError, function(e) {
-    //Will end up here on expected everyday network errors
+      // 预期的日常网络错误会出现在这里
 }).catch(function(e) {
-    //Catch any unexpected errors
+    // Catch 任何意想不到的错误
 });
 ```
 
-For a parameter to be considered a type of error that you want to filter, you need the constructor to have its `.prototype` property be `instanceof Error`.
+对于一个参数被认为是你想要过滤的错误类型，你需要构造函数的 `.prototype` 属性是 `instanceof Error`。
 
-Such a constructor can be minimally created like so:
+这样的构造函数可以这样创建：
 
 ```js
 function MyCustomError() {}
 MyCustomError.prototype = Object.create(Error.prototype);
 ```
 
-Using it:
+使用它:
 
 ```js
 Promise.resolve().then(function() {
@@ -123,9 +127,9 @@ Promise.resolve().then(function() {
 });
 ```
 
-However if you  want stack traces and cleaner string output, then you should do:
+但是，如果您想要堆栈跟踪和更干净的字符串输出，那么您应该这样做:
 
-*in Node.js and other V8 environments, with support for `Error.captureStackTrace`*
+  *在 Node.js 和其他 V8 环境中， 支持 `Error.captureStackTrace`*
 
 ```js
 function MyCustomError(message) {
@@ -137,7 +141,7 @@ MyCustomError.prototype = Object.create(Error.prototype);
 MyCustomError.prototype.constructor = MyCustomError;
 ```
 
-Using CoffeeScript's `class` for the same:
+使用 CoffeeScript 的 `class` ：
 
 ```coffee
 class MyCustomError extends Error
@@ -146,16 +150,11 @@ class MyCustomError extends Error
     Error.captureStackTrace(this, MyCustomError)
 ```
 
-This method also supports predicate-based filters. If you pass a
-predicate function instead of an error constructor, the predicate will receive
-the error as an argument. The return result of the predicate will be used
-determine whether the error handler should be called.
+该方法还支持基于谓词（predicate-based）的过滤器。 如果传递一个谓词函数而不是一个错误构造函数，则谓词将接收到该错误作为参数。谓词的返回结果将用于确定是否应该调用错误处理程序。
 
-Predicates should allow for very fine grained control over caught errors:
-pattern matching, error-type sets with set operations and many other techniques
-can be implemented on top of them.
+谓词应该允许对捕获到的错误进行非常细致的控制：模式匹配，带有集合操作的错误类型集合以及许多其他可以在它们之上实现的技术。
 
-Example of using a predicate-based filter:
+使用基于谓词的过滤器的示例：
 
 ```js
 var Promise = require("bluebird");
@@ -172,7 +171,7 @@ request("http://www.google.com").then(function(contents) {
 });
 ```
 
-Predicate functions that only check properties have a handy shorthand. In place of a predicate function, you can pass an object, and its properties will be checked against the error object for a match:
+只有检查属性的谓词函数有一个方便的速记。代替一个谓词函数，你可以传递一个对象，并且它的属性将检查错误对象对应的属性，以进行匹配：
 
 ```js
 fs.readFileAsync(...)
@@ -182,12 +181,12 @@ fs.readFileAsync(...)
     });
 ```
 
-The object predicate passed to `.catch` in the above code (`{code: 'ENOENT'}`) is shorthand for a predicate function `function predicate(e) { return isObject(e) && e.code == 'ENOENT' }`, I.E. loose equality is used.
+在上面的代码中，这个对象谓词(`{code: 'ENOENT'}`)被传递给 `.catch`，这是谓词函数 `function predicate(e) { return isObject(e) && e.code == 'ENOENT' }` 的速记。也就是说，它们是等价的。
 
-*For compatibility with earlier ECMAScript version, an alias `.caught` is provided for [`.catch`](.).*
+*为了与早期的 ECMAScript 版本兼容，为 [`.catch`](.) 提供了一个别名 `.caught`。*
 </markdown></div>
 
-By not returning a rejected value or `throw`ing from a catch, you "recover from failure" and continue the chain:
+通过不返回一个被拒绝的值或来自 catch `throw`，你“从失败中恢复”并继续链：
 
 ```js
 Promise.reject(Error('fail!'))
@@ -200,7 +199,7 @@ Promise.reject(Error('fail!'))
   });
 ```
 
-This is exactly like the synchronous code:
+这完全像同步代码：
 
 ```js
 var result;
@@ -217,7 +216,7 @@ console.log(result);
     var disqus_title = ".catch";
     var disqus_shortname = "bluebirdjs";
     var disqus_identifier = "disqus-id-catch";
-    
+
     (function() {
         var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
         dsq.src = "//" + disqus_shortname + ".disqus.com/embed.js";

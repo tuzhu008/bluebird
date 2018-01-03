@@ -5,15 +5,16 @@ title: .any
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.any
+
+## .any
 
 ```js
 .any() -> Promise
 ```
 
-Same as [Promise.any(this)](.).
+与 [Promise.any(this)](.) 相同。
 </markdown></div>
 
 <div id="disqus_thread"></div>

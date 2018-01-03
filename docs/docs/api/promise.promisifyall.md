@@ -5,9 +5,10 @@ title: Promise.promisifyAll
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.promisifyAll
+
+## Promise.promisifyAll
 
 ```js
 Promise.promisifyAll(
@@ -21,16 +22,16 @@ Promise.promisifyAll(
 ) -> Object
 ```
 
-Promisifies the entire object by going through the object's properties and creating an async equivalent of each function on the object and its prototype chain. The promisified method name will be the original method name suffixed with `suffix` (default is `"Async"`). Any class properties of the object (which is the case for the main export of many modules) are also promisified, both static and instance methods. Class property is a property with a function value that has a non-empty `.prototype` object. Returns the input object.
+通过遍历对象的属性来 promise化整个对象，并在对象和原型链上创建每个函数的异步等价物。 promise化的方法的名称将是后缀为`suffix`的原始方法名称（默认为 `"Async"`）。对象的任何类属性（许多模块的主要导出都是这种情况）也被普遍使用，包括静态方法和实例方法。 Class属性是一个具有非空的 `.prototype` 对象的函数值的属性。返回输入对象。
 
-Note that the original methods on the object are not overwritten but new methods are created with the `Async`-suffix. For example, if you `promisifyAll` the node.js `fs` object use `fs.statAsync` to call the promisified `stat` method.
+请注意，对象上的原始方法不会被覆盖，而是使用 `Async` 后缀创建新方法。 例如，如果你 `promisifyAll`，node.js `fs` 对象，使用 `fs.statAsync` 来调用 promise化的 `stat` 方法。
 
-Example:
+示例:
 
 ```js
 Promise.promisifyAll(require("redis"));
 
-//Later on, all redis client instances have promise returning functions:
+// 稍后，所有的 redis 客户端实例都有 promise 返回函数：
 
 redisClient.hexistsAsync("myhash", "field").then(function(v) {
 
@@ -39,7 +40,7 @@ redisClient.hexistsAsync("myhash", "field").then(function(v) {
 });
 ```
 
-It also works on singletons or specific instances:
+它也适用于单例或特定实例：
 
 ```js
 var fs = Promise.promisifyAll(require("fs"));
@@ -51,27 +52,28 @@ fs.readFileAsync("myfile.js", "utf8").then(function(contents) {
 });
 ```
 
-See [promisification](#promisification) for more examples.
+参见 [promisification](#promisification) 获得更多示例。
 
-The entire prototype chain of the object is promisified on the object. Only enumerable are considered. If the object already has a promisified version of the method, it will be skipped. The target methods are assumed to conform to node.js callback convention of accepting a callback as last argument and calling that callback with error as the first argument and success value on the second argument. If the node method calls its callback with multiple success values, the fulfillment value will be an array of them.
+对象的整个原型链被 promise 化在了对象上。只有可枚举的属性才被考虑。如果对象已经有了 promise化版本的方法，它将被跳过。目标方法被假定为符合接受接受回调作为最后一个参数的 node.js 回调约定，并将错误作为第一个参数和成功值作为第二个参数的调用该回调。如果 node 方法使用多个成功值调用其回调，则履行值将是它们的一个数组。
 
-If a method name already has an `"Async"`-suffix, it will be duplicated. E.g. `getAsync`'s promisified name is `getAsyncAsync`.
 
-####Option: suffix
+如果一个方法已经有了 `"Async"` 后缀，它会被复制。例如， `getAsync` 的 promise 化的名字为  `getAsyncAsync`。
 
-Optionally, you can define a custom suffix through the options object:
+#### 选项： suffix
+
+或者，您可以通过选项对象定义一个自定义后缀：
 
 ```js
 var fs = Promise.promisifyAll(require("fs"), {suffix: "MySuffix"});
 fs.readFileMySuffix(...).then(...);
 ```
 
-All the above limitations apply to custom suffices:
+以下所有的限制都适用于自定义:
 
-- Choose the suffix carefully, it must not collide with anything
-- PascalCase the suffix
-- The suffix must be a valid JavaScript identifier using ASCII letters
-- Always use the same suffix everywhere in your application, you could create a wrapper to make this easier:
+- 仔细选择后缀，不能与任何东西冲突
+- PascalCase 的后缀
+- 后缀必须是使用 ASCII 字母的有效 JavaScript 标识符
+- 在您的应用程序中始终使用相同的后缀，您可以创建一个包装器，使其更容易：
 
 ```js
 module.exports = function myPromisifyAll(target) {
@@ -79,10 +81,12 @@ module.exports = function myPromisifyAll(target) {
 };
 ```
 
-####Option: multiArgs
+#### 选项： multiArgs
 
 Setting `multiArgs` to `true` means the resulting promise will always fulfill with an array of the callback's success value(s). This is needed because promises only support a single success value while some callback API's have multiple success value. The default is to ignore all but the first success value of a callback function.
+将 `multiArgs` 设置为 `true` 意味着所得到的 promise 将总是以一个回调的成功值的数组来履行。这是必要的，因为 promise 只支持单个成功值，而一些回调 API 有多个成功值。默认情况下忽略除回调函数的第一个成功值之外的所有值。
 
+如果一个模块有多参数回调作为异常而不是规则，那么你可以先过滤掉多个参数方法，然后在第二个步骤中将模块的其余部分放在一边：
 If a module has multiple argument callbacks as an exception rather than the rule, you can filter out the multiple argument methods in first go and then promisify rest of the module in second go:
 
 ```js
@@ -96,32 +100,32 @@ Promise.promisifyAll(something, {
 Promise.promisifyAll(something);
 ```
 
-####Option: filter
+#### 选项： filter
 
-Optionally, you can define a custom filter through the options object:
+可选的，您可以通过选项对象定义一个自定义过滤器:
+
 
 ```js
 Promise.promisifyAll(..., {
     filter: function(name, func, target, passesDefaultFilter) {
-        // name = the property name to be promisified without suffix
+        // name = 将被 promise 化的属性名
         // func = the function
-        // target = the target object where the promisified func will be put with name + suffix
-        // passesDefaultFilter = whether the default filter would be passed
-        // return boolean (return value is coerced, so not returning anything is same as returning false)
+        // target = 目标对象，其中 promise 化的 fun 将使用 name + suffix 放置
+        // passesDefaultFilter = 表示是否会传递默认过滤器，返回一个布尔值(返回值是被强制的，因此不返回任何东西与返回 false 相同)
 
         return passesDefaultFilter && ...
     }
 })
 ```
 
-The default filter function will ignore properties that start with a leading underscore, properties that are not valid JavaScript identifiers and constructor functions (function which have enumerable properties in their `.prototype`).
+默认的过滤器函数将忽略以下划线开头的属性，这些属性不是有效的 JavaScript 标识符和构造函数(这里的函数是指在它们的 `.prototype` 中具有可枚举的属性)。
 
 
-####Option: promisifier
+#### 选项： promisifier
 
-Optionally, you can define a custom promisifier, so you could promisifyAll e.g. the chrome APIs used in Chrome extensions.
+可选，您可以定义一个自定义 promisifier，所以你可以promisifyAll 例如在 Chrome 扩展程序中使用的Chrome API。
 
-The promisifier gets a reference to the original method and should return a function which returns a promise.
+Promisifier 获取对原始方法的引用，并应该返回一个返回promise 的函数。
 
 ```js
 function DOMPromisifier(originalMethod) {
@@ -231,9 +235,9 @@ var version = fs.readFileAsync("package.json", "utf8").then(JSON.parse).get("ver
 fs.writeFileAsync("the-version.txt", version, "utf8");
 ```
 
-####Promisifying multiple classes in one go
+#### promise 化多个类
 
-You can promisify multiple classes in one go by constructing an array out of the classes and passing it to `promisifyAll`:
+您可以通过在类中构造一个数组并将其传递给 `promisifyAll` 来一次性 promise 化多个类：
 
 ```js
 var Pool = require("mysql/lib/Pool");
@@ -241,8 +245,7 @@ var Connection = require("mysql/lib/Connection");
 Promise.promisifyAll([Pool, Connection]);
 ```
 
-This works because the array acts as a "module" where the indices are the "module"'s properties for classes.
-
+之所以能这样做，是因为数组充当“模块”，索引是类的“模块”属性。
 
 
 </markdown></div>

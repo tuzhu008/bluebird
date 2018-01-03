@@ -30,16 +30,16 @@ class Redcarpet::Render::HTML
         if link == "unfinished-article"
             return <<-eos
             <div class="info-box">
-                This article is partially or completely unfinished.
-                You are welcome to create <a href="https://github.com/petkaantonov/bluebird/edit/master/docs/docs/#{content}.md">pull requests</a>
-                to help completing this article.
+                本文部分或完全未完成。
+               欢迎大家来创建 <a href="https://github.com/petkaantonov/bluebird/edit/master/docs/docs/#{content}.md">pull 请求</a>
+                来帮助完成这篇文章。
             </div>
             eos
         elsif link == "."
             if content =~ /#\d+/
                 url = "https://github.com/petkaantonov/bluebird/issues/" + content[1..-1]
             else
-                url = "/docs/api/" + Helpers.clean(content) + ".html"
+                url = "/bluebird_cn/docs/api/" + Helpers.clean(content) + ".html"
             end
             return "<a href='#{url}'><code>#{content}</code></a>"
         else

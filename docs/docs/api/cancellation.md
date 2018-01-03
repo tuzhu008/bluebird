@@ -1,30 +1,32 @@
 ---
 layout: api
 id: cancellation
-title: Cancellation
+title: cancellation
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Cancellation
 
-Cancellation has been redesigned for bluebird 3.x, any code that relies on 2.x cancellation semantics won't work in 3.x.
+## Cancellation
 
-The cancellation feature is **by default turned off**, you can enable it using [Promise.config](.).
+bluebird 3.x 重新设计了 Cancellation，任何依赖于  2.x cancellation 语义的代码在 3.x 都不能正常工作。
 
-The new cancellation has "don't care" semantics while the old cancellation had abort semantics. Cancelling a promise simply means that its handler callbacks will not be called.
+cancellation 特性**默认是关闭的**，你可以使用 [Promise.config](.) 启用它。
 
-The advantages of the new cancellation compared to the old cancellation are:
+新的 cancellation “不关心”语义，而旧的取消则有终止语义。取消 promise 仅仅意味着它的处理程序回调不会被调用。
 
-- [.cancel()](.) is synchronous.
-- no setup code required to make cancellation work
-- composes with other bluebird features, like [Promise.all](.).
-- [reasonable semantics for multiple consumer cancellation](#what-about-promises-that-have-multiple-consumers)
+与旧取消相比，新 cancellation 的好处是:
 
-As an optimization, the cancellation signal propagates upwards the promise chain so that an ongoing operation e.g. network request can be aborted. However, *not* aborting the network request still doesn't make any operational difference as the callbacks are still not called either way.
+- [.cancel()](.) 是同步的。
+- 不需要为取消工作设置代码
+- 与其他 bluebird 特性组合，如 [Promise.all](.).
+- [多用户取消的合理语义](#what-about-promises-that-have-multiple-consumers)
 
-You may register an optional cancellation hook at a root promise by using the `onCancel` argument that is passed to the executor function when cancellation is enabled:
+作为优化，取消信号传播到 promise 链上，这样一个正在进行的操作，例如网络请求可以被中止。然而，*不*中断网络请求仍然没有任何操作上的差异，因为回调仍然没有被调用。
+
+您可以通过使用 `onCancel` 参数在根 promise 上注册一个可选的取消钩子，该参数是在启用取消时传递给执行器函数的:
+
 
 ```js
 function makeCancellableRequest(url) {
@@ -34,7 +36,7 @@ function makeCancellableRequest(url) {
         xhr.on("error", reject);
         xhr.open("GET", url, true);
         xhr.send(null);
-        // Note the onCancel argument only exists if cancellation has been enabled!
+        // 注意，onCancel 参数只有在 cancellation 被启用才存在
         onCancel(function() {
             xhr.abort();
         });
@@ -42,16 +44,16 @@ function makeCancellableRequest(url) {
 }
 ```
 
-Note that the `onCancel` hook is really an optional disconnected optimization, there is no real requirement to register any cancellation hooks for cancellation to work. As such, any errors that may occur while inside the `onCancel` callback are not caught and turned into rejections.
+注意，`onCancel` 钩子实际上是一个可选的断开连接的优化，没有真正的要求为 cancellation 工作注册任何取消钩子。因此，在 `onCancel` 回调中可能出现的任何错误都不会被捕获并转为拒绝。
 
-While `cancel().` is synchronous - `onCancel()` is called asynchronously (in the next turn) just like `then` handlers.
+而 `.cancel()` 是同步的 —— `onCancel()`被异步调用(在下一个回合)，就像 `then` 处理程序一样。
 
-Example:
+示例:
 
 ```js
-var searchPromise = Promise.resolve();  // Dummy promise to avoid null check.
+var searchPromise = Promise.resolve();  // 虚拟的承诺，以避免空检查。
 document.querySelector("#search-input").addEventListener("input", function() {
-    // The handlers of the previous request must not be called
+    // 前一个请求的处理程序必须不能被调用
     searchPromise.cancel();
     var url = "/search?term=" + encodeURIComponent(this.value.trim());
     showSpinner();
@@ -66,7 +68,7 @@ document.querySelector("#search-input").addEventListener("input", function() {
             document.querySelector("#search-results").innerHTML = renderErrorBox(e);
         })
         .finally(function() {
-            // This check is necessary because `.finally` handlers are always called.
+            // 这个检查是必要的，因为 `.finally` 处理程序总是被调用
             if (!searchPromise.isCancelled()) {
                 hideSpinner();
             }
@@ -75,13 +77,15 @@ document.querySelector("#search-input").addEventListener("input", function() {
 
 ```
 
-As shown in the example the handlers registered with `.finally` are called even if the promise is cancelled. Another such exception is [.reflect()](.). No other types of handlers will be called in case of cancellation. This means that in `.then(onSuccess, onFailure)` neither `onSuccess` or `onFailure` handler is called. This is similar to how [`Generator#return`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator/return) works - only active `finally` blocks are executed and then the generator exits.
+如示例中所示的处理程序，即使 promise 被取消， `.finally` 也会被调用。另一个例外是 [.reflect()](.)。如果取消，则不会调用其他类型的处理程序。这意味着在 `.then(onSuccess, onFailure)` 中，`onSuccess` 或 `onFailure` 处理程序都不会被调用。这类似于怎样 [`Generator#return`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator/return) 的工作方式 —— 只有活动的 `finally` 块被执行，然后 generator 退出。
 
-###What about promises that have multiple consumers?
+<a href='what-about-promises-that-have-multiple-consumers'></a>
 
-It is often said that promises cannot be cancellable because they can have multiple consumers.
+### 那么多消费者的承诺呢是什么？
 
-For instance:
+人们常说，promise 不能被取消，因为他们可以拥有多个用户。
+
+例如:
 
 ```js
 var result = makeCancellableRequest(...);
@@ -90,11 +94,12 @@ var firstConsumer = result.then(...);
 var secondConsumer = result.then(...);
 ```
 
-Even though in practice most users of promises will never have any need to take advantage of the fact that you can attach multiple consumers to a promise, it is nevertheless possible. The problem: "what should happen if [.cancel()](.) is called on `firstConsumer`?" Propagating the cancellation signal (and therefore making it abort the request) would be very bad as the second consumer might still be interested in the result despite the first consumer's disinterest.
+尽管在实践中，大多数 promise 的用户永远不会有任何必要利用这样一个事实:您可以将多个用户连接到一个 promise 上，但这是可能的。问题是:“如果 [.cancel()](.) 在 `firstConsumer` 上被调用会发生什么?” 传播取消信号(因此使它中止请求)将是非常糟糕的，因为第二个用户可能仍然对结果感兴趣，尽管第一个用户不感兴趣。
 
-What actually happens is that `result` keeps track of how many consumers it has, in this case 2, and only if all the consumers signal cancel will the request be aborted. However, as far as `firstConsumer` can tell, the promise was successfully cancelled and its handlers will not be called.
+实际情况是，这个 `result` 会跟踪它有多少用户，在这种情况下，只有当所有用户的信号都被取消时，这个请求才会被终止。然而，就 `firstConsumer` 而言，这个 promise 被成功地取消了，它的处理程序也不会被调用。
 
-Note that it is an error to consume an already cancelled promise, doing such a thing will give you a promise that is rejected with `new CancellationError("late cancellation observer")` as the rejection reason.
+注意，使用已经取消的承诺是一个错误，这样做会得到一个理由为`new CancellationError("late cancellation observer")` 的拒绝。
+
 
 <hr>
 </markdown></div>

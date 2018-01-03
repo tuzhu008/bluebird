@@ -5,9 +5,10 @@ title: Promise.filter
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##Promise.filter
+
+## Promise.filter
 
 ```js
 Promise.filter(
@@ -17,10 +18,10 @@ Promise.filter(
 ) -> Promise
 ```
 
-Given an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(arrays are `Iterable`\), or a promise of an `Iterable`, which produces promises (or a mix of promises and values), iterate over all the values in the `Iterable` into an array and [filter the array to another](http://en.wikipedia.org/wiki/Filter_\(higher-order_function\)) using the given `filterer` function.
+给定一个[`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)\(数组是`Iterable`\)，或者一个可迭代的 promise，它产生 promise(或 promise 和值的混合)，迭代遍历 `Iterable` 中所有的值放入一个数组中，并使用给定的 `filterer` 函数[将过滤数组到另一个数组](http://en.wikipedia.org/wiki/Filter_\(higher-order_function\)) 。
 
 
-It is essentially an efficient shortcut for doing a [.map](.) and then [`Array#filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter):
+它本质上是 [.map](.)并随后进行 [`Array#filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) 的高效的快捷方式：
 
 ```js
 Promise.map(valuesToBeFiltered, function(value, index, length) {
@@ -34,7 +35,7 @@ Promise.map(valuesToBeFiltered, function(value, index, length) {
 });
 ```
 
-Example for filtering files that are accessible directories in the current directory:
+用于过滤当前目录中可访问目录的文件:
 
 ```js
 var Promise = require("bluebird");
@@ -54,9 +55,9 @@ fs.readdirAsync(process.cwd()).filter(function(fileName) {
 });
 ```
 
-####Filter Option: concurrency
+#### Filter 选项: concurrency
 
-See [Map Option: concurrency](#map-option-concurrency)
+参见 [Map 选项: concurrency](/bluebird_cn/docs/api/promise.map.html#map-option-concurrency)
 </markdown></div>
 
 <div id="disqus_thread"></div>

@@ -1,6 +1,6 @@
 ---
 id: contribute
-title: Contribute
+title: 贡献
 ---
 
 For development tasks such as contributing, running benchmarks or testing, you need to clone the repository and install dev-dependencies.

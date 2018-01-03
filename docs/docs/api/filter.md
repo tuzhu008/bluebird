@@ -5,9 +5,10 @@ title: .filter
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.filter
+
+## .filter
 
 ```js
 .filter(
@@ -16,7 +17,7 @@ title: .filter
 ) -> Promise
 ```
 
-Same as [Promise.filter(this, filterer, options)](.).
+等同于 [Promise.filter(this, filterer, options)](.).
 </markdown></div>
 
 <div id="disqus_thread"></div>

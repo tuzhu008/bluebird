@@ -1,6 +1,6 @@
 ---
 id: changelog
-title: Changelog
+title: 更新日志
 ---
 
 ## 3.5.1 (2017-10-04)

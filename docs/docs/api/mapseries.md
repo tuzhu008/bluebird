@@ -5,7 +5,7 @@ title: .mapseries
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
 ##.mapSeries
 
@@ -13,7 +13,8 @@ title: .mapseries
 .mapSeries(function(any item, int index, int length) mapper) -> Promise
 ```
 
-Same as [Promise.mapSeries(this, iterator)](.).
+等同于 [Promise.mapSeries(this, iterator)](.)。
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

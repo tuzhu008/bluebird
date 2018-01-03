@@ -1,6 +1,6 @@
 ---
 id: beginners-guide
-title: Beginner's Guide
+title: 初学者指南
 ---
 
 [beginners-guide](unfinished-article)

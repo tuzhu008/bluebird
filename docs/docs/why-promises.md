@@ -3,9 +3,9 @@ id: why-promises
 title: Why Promises?
 ---
 
-Promises are a concurrency primitive with a proven track record and language integration in most modern programming languages. They have been extensively studied since the 80s and will make your life much easier.
+Promises 是一种并发原语，在大多数现代编程语言中都具有可靠的跟踪记录和语言集成。从 80 年代开始，他们就被广泛地研究过，这将使你的生活更加轻松。
 
-You should use promises to turn this:
+你应该用 promises 来扭转这一情况:
 
 ```js
 fs.readFile("file.json", function (err, val) {
@@ -24,7 +24,7 @@ fs.readFile("file.json", function (err, val) {
 });
 ```
 
-Into this:
+使用 promise:
 
 ```js
 fs.readFileAsync("file.json").then(JSON.parse).then(function (val) {
@@ -38,9 +38,9 @@ fs.readFileAsync("file.json").then(JSON.parse).then(function (val) {
 });
 ```
 
-*If you're thinking, "There's no `readFileAsync` method on `fs` that returns a promise!" see [promisification](api/promisification.html)*
+*如果你想, "`fs` 上没有返回一个 promise 的 `readFileAsync` 方法" 参见 [promise 化](api/promisification.html)*
 
-You might notice that the promise approach looks very similar to using synchronous I/O:
+您可能会注意到，promise 方法与使用同步的 I/O 出非常相似:
 
 ```js
 try {
@@ -55,10 +55,9 @@ catch (e) {
     console.error("unable to read file");
 }
 ```
+这是重点 - 有一些工作像同步代码中的 `return` 和 `throw`。
 
-This is the point—to have something that works like `return` and `throw` in synchronous code.
-
-You can also use promises to improve code that was written with callbacks:
+您还可以使用 promises 来改进编写回调的代码:
 
 ```js
 //Copyright Plato http://stackoverflow.com/a/19385911/995876
@@ -94,7 +93,7 @@ mapSeries(URLs, function (URL, done) {
 });
 ```
 
-This is far more readable when done with promises:
+采用 promises 完成时，这更具可读性：
 
 ```js
 Promise.promisifyAll(needle);
@@ -117,11 +116,11 @@ Promise.map(URLs, function (URL) {
 });
 ```
 
-Also, promises don't just give you correspondences for synchronous features; they can also be used as limited event emitters or callback aggregators.
+此外，promises 不只是给你的同步功能的通信; 它们也可以用作有限事件发射器或回调聚合器。
 
-More reading:
+更多的阅读：
 
  - [Promise nuggets](https://promise-nuggets.github.io/)
- - [Why I am switching to promises](http://spion.github.io/posts/why-i-am-switching-to-promises.html)
- - [What is the the point of promises](http://domenic.me/2012/10/14/youre-missing-the-point-of-promises/#toc_1)
+ - [为什么我要转换为 promise?](http://spion.github.io/posts/why-i-am-switching-to-promises.html)
+ - [promise 的意义是什么?](http://domenic.me/2012/10/14/youre-missing-the-point-of-promises/#toc_1)
  - [Aren't Promises Just Callbacks?](http://stackoverflow.com/questions/22539815/arent-promises-just-callbacks)

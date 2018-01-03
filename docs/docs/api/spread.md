@@ -5,18 +5,18 @@ title: .spread
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
 ##.spread
 
 ```js
 .spread(
-    [function(any values...) fulfilledHandler]
+    [function(any values...) fulfilledHandler] // promise 被resolve 后调用
 ) -> Promise
 ```
 
 
-Like calling `.then`, but the fulfillment value _must be_ an array, which is flattened to the formal parameters of the fulfillment handler.
+像调用 `.then` 一样，但是履行（fulfillment）值 **必须** 是一个数组，它被简化为履行状态处理程序的正式参数。
 
 ```js
 Promise.all([
@@ -32,7 +32,7 @@ Promise.all([
 });
 ```
 
-When chaining `.spread`, returning an array of promises also works:
+当链式调用 `.spread` 时，返回一个 promise 数组也起作用：
 
 ```js
 Promise.delay(500).then(function() {
@@ -48,7 +48,7 @@ Promise.delay(500).then(function() {
 });
 ```
 
-Note that if using ES6, the above can be replaced with [.then()](.) and destructuring:
+注意，如果使用 ES6，以上可以使用 [.then()](.) 和解构替换:
 
 ```js
 Promise.delay(500).then(function() {
@@ -64,9 +64,10 @@ Promise.delay(500).then(function() {
 });
 ```
 
-Note that [.spread()](.) implicitly does [.all()](.) but the ES6 destructuring syntax doesn't, hence the manual `.all()` call in the above code.
+注意，[.spread()](.) 隐式地进行 [.all()](.) ，但是 ES6 解构语法不会，因此在上面的代码中手动进行 `.all()` 调用。
 
-If you want to coordinate several discrete concurrent promises, use [`Promise.join`](.)
+如果您想要整合几个离散的并发 promise，请使用 [`Promise.join`](.)
+
 </markdown></div>
 
 <div id="disqus_thread"></div>

@@ -5,15 +5,16 @@ title: .cancel
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.cancel
+
+## .cancel
 
 ```js
 .cancel() -> undefined
 ```
 
-Cancel this promise. Will not do anything if this promise is already settled or if the [Cancellation](.) feature has not been enabled. See [Cancellation](.) for how to use cancellation.
+取消 promise。如果这个承诺已经解决，或者 [Cancellation](.) 特性还没有启用，将不会做任何事情。对于如何使用取消，参见 [Cancellation](.) 。
 
 <hr>
 </markdown></div>

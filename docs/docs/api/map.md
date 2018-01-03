@@ -5,9 +5,10 @@ title: .map
 ---
 
 
-[← Back To API Reference](/docs/api-reference.html)
+[← Back To API Reference](/bluebird_cn/docs/api-reference.html)
 <div class="api-code-section"><markdown>
-##.map
+
+## .map
 
 ```js
 .map(
@@ -16,7 +17,7 @@ title: .map
 ) -> Promise
 ```
 
-Same as [Promise.map(this, mapper, options)](.).
+等同于 [Promise.map(this, mapper, options)](.)。
 </markdown></div>
 
 <div id="disqus_thread"></div>
